@@ -1,4 +1,4 @@
-package com.company;
+package com.ifarm;
 
 public class Farm {
 
