@@ -1,6 +1,7 @@
 package com.util;
 
 import com.activity.Activity;
+import com.farmer.Farmer;
 import com.fertilizer.Fertilizer;
 import com.pesticide.Pesticide;
 import com.plant.Plant;
@@ -80,6 +81,27 @@ public class DAO {
             e.printStackTrace();
         }
         return pesticideList;
+    }
+
+    public List<Farmer> getFarmerData() {
+        List<Farmer> farmerList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("SELECT * FROM users");
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                //mapping result set to plant
+                Farmer farmer = new Farmer();
+                farmer.set_id(result.getString("_id"));
+                farmer.setName(result.getString("name"));
+                farmer.setEmail(result.getString("email"));
+                farmer.setPhoneNumber(result.getString("phoneNumber"));
+                farmer.setPassword(result.getString("password"));
+                farmerList.add(farmer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return farmerList;
     }
 
     public void insertActivityData(Activity activity) {
