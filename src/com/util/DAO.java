@@ -1,6 +1,7 @@
 package com.util;
 
 import com.activity.Activity;
+import com.farm.Farm;
 import com.farmer.Farmer;
 import com.fertilizer.Fertilizer;
 import com.pesticide.Pesticide;
@@ -102,6 +103,25 @@ public class DAO {
             e.printStackTrace();
         }
         return farmerList;
+    }
+
+    public List<Farm> getFarmData() {
+        List<Farm> farmList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("SELECT * FROM farms");
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                //mapping result set to farms
+                Farm farm = new Farm();
+                farm.set_id(result.getString("_id"));
+                farm.setName(result.getString("name"));
+                farm.setAddress(result.getString("address"));
+                farmList.add(farm);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return farmList;
     }
 
     public void insertActivityData(Activity activity) {
