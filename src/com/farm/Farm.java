@@ -1,15 +1,17 @@
 package com.farm;
 
-import java.util.List;
+import com.fertilizer.Fertilizer;
+import com.pesticide.Pesticide;
+import com.plant.Plant;
 
 public class Farm {
 
     private String _id;
     private String name;
     private String address;
-    private List<String> pesticides;
-    private List<String> fertilizes;
-    private List<String> plants;
+    private Pesticide[] pesticides;
+    private Fertilizer[] fertilizes;
+    private Plant[] plants;
     private int row;
     private int field;
 
@@ -17,7 +19,7 @@ public class Farm {
 
     }
 
-    public Farm(String _id, String name, String address, List<String> pesticides, List<String> fertilizes, List<String> plants, int row, int field) {
+    public Farm(String _id, String name, String address, Pesticide[] pesticides, Fertilizer[] fertilizes, Plant[] plants, int row, int field) {
         this._id = _id;
         this.name = name;
         this.address = address;
@@ -52,27 +54,27 @@ public class Farm {
         this.address = address;
     }
 
-    public List<String> getPesticides() {
+    public Pesticide[] getPesticides() {
         return pesticides;
     }
 
-    public void setPesticides(List<String> pesticides) {
+    public void setPesticides(Pesticide[] pesticides) {
         this.pesticides = pesticides;
     }
 
-    public List<String> getFertilizes() {
+    public Fertilizer[] getFertilizes() {
         return fertilizes;
     }
 
-    public void setFertilizes(List<String> fertilizes) {
+    public void setFertilizes(Fertilizer[] fertilizes) {
         this.fertilizes = fertilizes;
     }
 
-    public List<String> getPlants() {
+    public Plant[] getPlants() {
         return plants;
     }
 
-    public void setPlants(List<String> plants) {
+    public void setPlants(Plant[] plants) {
         this.plants = plants;
     }
 
