@@ -236,4 +236,56 @@ public class DAO {
             e.printStackTrace();
         }
     }
+
+    public List<Activity> getActivityByFarmId(String farmId) {
+        List<Activity> activityList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("SELECT * FROM user_farm where farmId=?");
+            statement.setString(1, farmId);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                //mapping result set to activity
+                Activity activity = new Activity();
+                activity.setFarmId(result.getString("farmId"));
+                activity.setUserId(result.getString("userId"));
+                activity.setDate(result.getString("date"));
+                activity.setAction(result.getString("action"));
+                activity.setType(result.getString("type"));
+                activity.setUnit(result.getString("unit"));
+                activity.setQuantity(result.getDouble("quantity"));
+                activity.setField(result.getInt("field"));
+                activity.setRow(result.getInt("row"));
+                activityList.add(activity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return activityList;
+    }
+
+    public List<Activity> getActivityByFarmerId(String userId) {
+        List<Activity> activityList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("SELECT * FROM user_farm where userId=?");
+            statement.setString(1, userId);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                //mapping result set to activity
+                Activity activity = new Activity();
+                activity.setFarmId(result.getString("farmId"));
+                activity.setUserId(result.getString("userId"));
+                activity.setDate(result.getString("date"));
+                activity.setAction(result.getString("action"));
+                activity.setType(result.getString("type"));
+                activity.setUnit(result.getString("unit"));
+                activity.setQuantity(result.getDouble("quantity"));
+                activity.setField(result.getInt("field"));
+                activity.setRow(result.getInt("row"));
+                activityList.add(activity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return activityList;
+    }
 }
