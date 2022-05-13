@@ -3,7 +3,6 @@ package com.farmer;
 import com.farm.Farm;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Farmer implements Runnable {
@@ -13,9 +12,9 @@ public class Farmer implements Runnable {
     private String email;
     private String password;
     private String phoneNumber;
-    private List<Farm> farmList;
+    private Farm[] farmList;
 
-    public Farmer(String _id, String name, String email, String password, String phoneNumber, List<Farm> farmList) {
+    public Farmer(String _id, String name, String email, String password, String phoneNumber, Farm[] farmList) {
         this._id = _id;
         this.name = name;
         this.email = email;
@@ -67,18 +66,18 @@ public class Farmer implements Runnable {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Farm> getFarmList() {
+    public Farm[] getFarmList() {
         return farmList;
     }
 
-    public void setFarmList(List<Farm> farmList) {
+    public void setFarmList(Farm[] farmList) {
         this.farmList = farmList;
     }
 
     public void displayFarmList() {
         System.out.println("Farms list that are in charged by " + name + " are :");
         for (Farm farm : farmList) {
-//        System.out.println(farm.getName);
+            System.out.println(farm.getName());
         }
     }
 
@@ -98,8 +97,8 @@ public class Farmer implements Runnable {
         for (int i = 0; i < totalActNum; i++) {
 
             // Farmer randomly pick one farm
-            int currentFarm = (int) Math.floor(Math.random() * (farmList.size()));
-            farmNumberActivity.put(farmList.get(currentFarm).get_id(), (farmNumberActivity.get(farmList.get(currentFarm).get_id())-1));
+            int currentFarm = (int) Math.floor(Math.random() * (farmList.length));
+            farmNumberActivity.put(farmList[currentFarm].get_id(), (farmNumberActivity.get(farmList[currentFarm].get_id())-1));
         }
     }
 }

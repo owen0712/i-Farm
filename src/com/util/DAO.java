@@ -159,7 +159,7 @@ public class DAO {
                 farmer.setPhoneNumber(result.getString("phoneNumber"));
                 farmer.setPassword(result.getString("password"));
                 //need to reconfirm the name in farmer class
-                farmer.setFarmList(Arrays.asList(getFarmDataByFarmerId(farmer.get_id())));
+                farmer.setFarmList(getFarmDataByFarmerId(farmer.get_id()));
                 farmerList.add(farmer);
             }
         } catch (SQLException e) {
