@@ -145,7 +145,7 @@ public class DAO {
         return pesticideList.toArray(new Pesticide[pesticideList.size()]);
     }
 
-    public List<Farmer> getFarmerData() {
+    public Farmer[] getFarmerData() {
         List<Farmer> farmerList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM users");
@@ -165,7 +165,7 @@ public class DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return farmerList;
+        return farmerList.toArray(new Farmer[farmerList.size()]);
     }
 
     public Farm[] getFarmData() {

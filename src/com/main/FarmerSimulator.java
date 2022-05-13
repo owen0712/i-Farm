@@ -1,15 +1,22 @@
 package com.main;
 
 import com.farmer.Farmer;
+import com.util.DAO;
 
-public class FarmerSimulator implements FarmerSimulatorInterface{
+import java.util.Arrays;
+
+public class FarmerSimulator implements FarmerSimulatorInterface {
 
     @Override
     public Farmer[] generateFarmers(int numberOfFarmers) {
-        Farmer[]farmers=new Farmer[numberOfFarmers];
-        for(int i=0;i<farmers.length;i++){
-            farmers[i]=new Farmer();
-        }
+
+        Farmer[] farmers;
+
+        DAO dao = new DAO();
+
+        Farmer[] tempFarmers = dao.getFarmerData();
+        farmers = Arrays.copyOfRange(tempFarmers, 0, numberOfFarmers);
+
         return farmers;
     }
 }
