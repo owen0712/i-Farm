@@ -14,5 +14,22 @@ public class Main {
             Thread farmerThread=new Thread(farmer);
             farmerThread.start();
         }
+
+        // I did another version using threadPool see see
+//        Random random = new Random();
+//        int randFarmer = random.nextInt(0)+100;
+//        ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randFarmer);
+//        Farmer[]farmers=simulator.generateFarmers(randFarmer);
+//        for(Farmer farmer:farmers){
+//            Thread farmerThread=new Thread(farmer);
+//            farmerThreadPool.execute(farmer);
+//        }
+//        ThreadPool.shutdown();
+//        while(true){
+//            if(ThreadPool.isTerminated()){
+//                Timer.setEnd(true);
+//                break;
+//            }
+//        }
     }
 }
