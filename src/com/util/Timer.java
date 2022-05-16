@@ -7,6 +7,7 @@ public class Timer {
 
     private long startTime;
     private long disasterTime; //Random generated in second, using setter method to set
+    private boolean isEnd;
 
     public static String getCurrentTime() {
         return new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
@@ -32,5 +33,13 @@ public class Timer {
 
     public void setDisasterTime(long disasterTime) {
         this.disasterTime = disasterTime;
+    }
+
+    public boolean isEnd() {
+        return isEnd;
+    }
+
+    public void setEnd(boolean end) {
+        isEnd = end;
     }
 }
