@@ -1,6 +1,8 @@
 package com.main;
 
 import com.farmer.Farmer;
+import com.util.Timer;
+import com.util.TimerThread;
 
 import java.util.Random;
 
@@ -30,6 +32,16 @@ public class Main {
 //                Timer.setEnd(true);
 //                break;
 //            }
+//        }
+
+        // How to create TimerThread
+//        Timer timer = new Timer();
+//        timer.setDisasterTime(15);
+//        TimerThread timerThread = new TimerThread(timer);
+//        timerThread.start();
+//        for(int i = 0; i < 10; i++){ // Just a testing
+//            System.out.println(timer.getFakeTime());
+//            Thread.sleep(1000);
 //        }
     }
 }
