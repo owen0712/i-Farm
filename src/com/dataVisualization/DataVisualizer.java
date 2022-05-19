@@ -1,4 +1,4 @@
-package com.datavisualization;
+package com.dataVisualization;
 
 public class DataVisualizer {
 }

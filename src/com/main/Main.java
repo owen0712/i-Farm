@@ -11,19 +11,11 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[]args) throws InterruptedException {
-//        Random random = new Random();
-//        FarmerSimulator simulator = new FarmerSimulator();
-//        Farmer[]farmers=simulator.generateFarmers(random.nextInt(100)+100);
-//        for(Farmer farmer:farmers){
-//            Thread farmerThread=new Thread(farmer);
-//            farmerThread.start();
-//        }
-
         Random random = new Random();
-        int randFarmer = random.nextInt(100)+100;
-        ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randFarmer);
+        int randomFarmerNumber = random.nextInt(100)+100;
+        ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
         FarmerSimulator simulator = new FarmerSimulator();
-        Farmer[]farmers=simulator.generateFarmers(randFarmer);
+        Farmer[]farmers=simulator.generateFarmers(randomFarmerNumber);
         Timer timer = new Timer();
         timer.setDisasterTime(15);
         TimerThread timerThread = new TimerThread(timer);
@@ -33,7 +25,7 @@ public class Main {
         }
         farmerThreadPool.shutdown();
         while(!farmerThreadPool.isTerminated()){
-         //do something
+         //wait all farmer finish job
         }
         timer.setEnd(true);
         System.out.println("All thread have been terminated");

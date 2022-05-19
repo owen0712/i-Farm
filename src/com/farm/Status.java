@@ -5,11 +5,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Status {
 
     private ReentrantLock lock;
-    private String status;
+    private String action;
+    private String plant;
 
     public Status(){
         this.lock = new ReentrantLock();
-        this.status = null;
+        this.action = null;
+        this.plant = null;
     }
 
     public ReentrantLock getLock() {
@@ -20,11 +22,11 @@ public class Status {
         this.lock = lock;
     }
 
-    public String getStatus() {
-        return status;
+    public String getAction() {
+        return action;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setAction(String action) {
+        this.action = action;
     }
 }

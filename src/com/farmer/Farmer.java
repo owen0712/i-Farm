@@ -4,7 +4,7 @@ import com.activity.Activity;
 import com.dataHandling.DataHandling;
 import com.farm.Farm;
 import com.farm.Status;
-import com.util.Logger;
+import com.util.IFarmLogger;
 import com.util.Timer;
 
 import java.util.HashMap;
@@ -18,8 +18,8 @@ public class Farmer implements Runnable {
     private String password;
     private String phoneNumber;
     private Farm[] farmList;
-    private Logger logger;
-    private final String[] actionList = {"Sowing","Fertilizer","Pesticide","Harvesting"};
+    private IFarmLogger logger;
+    private final String[] actionList = {"sowing","fertilizer","pesticide","harvest","sales"};
 
     public Farmer(String _id, String name, String email, String password, String phoneNumber, Farm[] farmList) {
         this._id = _id;
@@ -31,7 +31,6 @@ public class Farmer implements Runnable {
     }
 
     public Farmer() {
-        logger = new Logger(this);
     }
 
     public String get_id() {
@@ -95,7 +94,7 @@ public class Farmer implements Runnable {
                 status.getLock().lock();
 
                 //check the row and field current action and decide the next action
-                if(status.getStatus()==null){
+                if(status.getAction()==null){
                     action = this.actionList[0];
                 }else{
                     action = this.actionList[(int)(Math.random()*(this.actionList.length-1)+1)];
@@ -135,19 +134,21 @@ public class Farmer implements Runnable {
 //                activity.setQuantity(Math.random()*10);
 //                activity.setField(field);
 //                activity.setRow(row);
+                System.out.println(activity);
                 DataHandling.addElementIntoQueue(activity);
 
                 //switch the action of current row and field to the next action
                 //when action is harvesting, the action will change to null
                 if (action.equals("Harvesting")){
-                    status.setStatus(null);
+                    status.setAction(null);
                 }else{
-                    status.setStatus(action);
+                    status.setAction(action);
                 }
 
                 //log in to logfile
                 //format: (Sowing Plant Field 1 Row 1 1.5 UnitType at FarmName 2022-05-18)
-                logger.logActivities(activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.getName()+" "+activity.getDate());
+                logger = new IFarmLogger(this);
+                logger.logActivities(activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.get_id()+" "+activity.getDate());
                 status.getLock().unlock();
                 break;
             }

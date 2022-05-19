@@ -28,6 +28,15 @@ public class DAO {
         }
     }
 
+    public void deleteAllActivityRecord(){
+        try {
+            statement = connection.prepareStatement("DELETE * FROM activities");
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Plant[] getPlantData() {
         List<Plant> plantList = new ArrayList<>();
         try {
@@ -158,7 +167,6 @@ public class DAO {
                 farmer.setEmail(result.getString("email"));
                 farmer.setPhoneNumber(result.getString("phoneNumber"));
                 farmer.setPassword(result.getString("password"));
-                //need to reconfirm the name in farmer class
                 farmer.setFarmList(getFarmDataByFarmerId(farmer.get_id()));
                 farmerList.add(farmer);
             }
@@ -213,7 +221,7 @@ public class DAO {
         return farmList.toArray(new Farm[farmList.size()]);
     }
 
-    public void insertActivityData(Activity activity) {
+    public synchronized boolean insertActivityData(Activity activity) {
         try {
             statement = connection.prepareStatement("INSERT INTO activities('_id','farmId','userId','date','action','type','unit','quantity','row','field') VALUES(?,?,?,?,?,?,?,?,?,?)");
             statement.setString(0, activity.get_id());
@@ -228,6 +236,7 @@ public class DAO {
             statement.setInt(9, activity.getField());
             statement.executeUpdate();
             connection.commit();
+            return true;
         } catch (SQLException e) {
             try {
                 connection.rollback();
@@ -235,6 +244,7 @@ public class DAO {
                 s.printStackTrace();
             }
             e.printStackTrace();
+            return false;
         }
     }
 

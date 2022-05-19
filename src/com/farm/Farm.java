@@ -16,10 +16,11 @@ public class Farm {
     private int field;
     private Status[][] status;
 
-    public Farm(){
-        this.row = (int)(Math.random() * 11 + 10);   // total number of row 10 - 20
-        this.field = (int)(Math.random() * 11 + 10); // total number of field 10 - 20
+    public Farm() {
+        this.row = (int) (Math.random() * 11 + 10);   // total number of row 10 - 20
+        this.field = (int) (Math.random() * 11 + 10); // total number of field 10 - 20
         status = new Status[this.row][this.field];
+        initializeStatus();
     }
 
     // Maybe will not use this constructor, basically the data will directly get from DAO
@@ -33,6 +34,10 @@ public class Farm {
         this.row = row;
         this.field = field;
         this.status = status;
+        this.row = (int) (Math.random() * 11 + 10);   // total number of row 10 - 20
+        this.field = (int) (Math.random() * 11 + 10); // total number of field 10 - 20
+        status = new Status[this.row][this.field];
+        initializeStatus();
     }
 
     public String get_id() {
@@ -99,11 +104,19 @@ public class Farm {
         this.field = field;
     }
 
-    public Status getStatusByRowAndField(int row, int field){
+    public Status getStatusByRowAndField(int row, int field) {
         return this.status[row][field];
     }
 
-    public void setStatusByRowAndField(int row, int field, Status status){
+    public void setStatusByRowAndField(int row, int field, Status status) {
         this.status[row][field] = status;
+    }
+
+    private void initializeStatus() {
+        for (int row = 0; row < status.length; row++) {
+            for (int column = 0; column < status[row].length; column++) {
+                status[row][column] = new Status();
+            }
+        }
     }
 }
