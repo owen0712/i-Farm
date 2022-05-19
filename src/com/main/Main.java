@@ -1,6 +1,8 @@
 package com.main;
 
+import com.dataHandling.DataHandling;
 import com.farmer.Farmer;
+import com.util.DAO;
 import com.util.Timer;
 import com.util.TimerThread;
 
@@ -11,8 +13,12 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[]args) throws InterruptedException {
+        DAO dao = new DAO();
+        Thread dataHandlingThread = new Thread(new DataHandling());
+        dataHandlingThread.start();
         Random random = new Random();
-        int randomFarmerNumber = random.nextInt(100)+100;
+//        int randomFarmerNumber = random.nextInt(100);
+        int randomFarmerNumber = 100;
         ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
         FarmerSimulator simulator = new FarmerSimulator();
         Farmer[]farmers=simulator.generateFarmers(randomFarmerNumber);

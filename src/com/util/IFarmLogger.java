@@ -19,7 +19,7 @@ public class IFarmLogger {
         logger = Logger.getLogger(Farmer.class.getName()+farmer.get_id());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
         try {
-            fileHandler = new FileHandler("log/farmer/"+farmer.get_id()+"_"+formatter.format(new Date())+".txt", true);
+            fileHandler = new FileHandler("log/farmer/"+farmer.get_id()+".txt", true);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
         } catch (IOException e) {
@@ -31,7 +31,7 @@ public class IFarmLogger {
         logger = Logger.getLogger(Farm.class.getName()+farmId);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
         try {
-            fileHandler = new FileHandler("log/farm/"+farmId+"_"+formatter.format(new Date())+".txt", true);
+            fileHandler = new FileHandler("log/farm/"+farmId+".txt", true);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
         } catch (IOException e) {
@@ -41,5 +41,6 @@ public class IFarmLogger {
 
     public void logActivities(String text){
         logger.info(text);
+        fileHandler.close();
     }
 }

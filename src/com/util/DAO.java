@@ -16,8 +16,7 @@ public class DAO {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/ifarm";
     private final String username = "root";
     private final String password = "root";
-    private Connection connection;
-    private PreparedStatement statement;
+    private static Connection connection;
 
     public DAO() {
         try {
@@ -29,6 +28,7 @@ public class DAO {
     }
 
     public void deleteAllActivityRecord(){
+        PreparedStatement statement;
         try {
             statement = connection.prepareStatement("DELETE * FROM activities");
             statement.execute();
@@ -38,6 +38,7 @@ public class DAO {
     }
 
     public Plant[] getPlantData() {
+        PreparedStatement statement;
         List<Plant> plantList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM plants");
@@ -57,6 +58,7 @@ public class DAO {
     }
 
     public Plant[] getPlantDataByFarmId(String farmId) {
+        PreparedStatement statement;
         List<Plant> plantList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM farm_plant INNER JOIN plants ON farm_plant.plant_id=plants._id where farm_id=?");
@@ -77,6 +79,7 @@ public class DAO {
     }
 
     public Fertilizer[] getFertilizerData() {
+        PreparedStatement statement;
         List<Fertilizer> fertilizerList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM fertilizers");
@@ -96,6 +99,7 @@ public class DAO {
     }
 
     public Fertilizer[] getFertilizerDataByFarmId(String farmId) {
+        PreparedStatement statement;
         List<Fertilizer> fertilizerList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM farm_fertilizer INNER JOIN fertilizers ON farm_fertilizer.fertilizer_id=fertilizers._id where farm_id=?");
@@ -116,6 +120,7 @@ public class DAO {
     }
 
     public Pesticide[] getPesticideData() {
+        PreparedStatement statement;
         List<Pesticide> pesticideList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM pesticides");
@@ -135,6 +140,7 @@ public class DAO {
     }
 
     public Pesticide[] getPesticideDataByFarmId(String farmId) {
+        PreparedStatement statement;
         List<Pesticide> pesticideList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM farm_pesticide INNER JOIN pesticides ON farm_pesticide.pesticide_id=pesticides._id where farm_id=?");
@@ -155,6 +161,7 @@ public class DAO {
     }
 
     public Farmer[] getFarmerData() {
+        PreparedStatement statement;
         List<Farmer> farmerList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM users");
@@ -177,6 +184,7 @@ public class DAO {
     }
 
     public Farm[] getFarmData() {
+        PreparedStatement statement;
         List<Farm> farmList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM farms");
@@ -199,6 +207,7 @@ public class DAO {
     }
 
     public Farm[] getFarmDataByFarmerId(String farmerId) {
+        PreparedStatement statement;
         List<Farm> farmList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM user_farm INNER JOIN farms ON user_farm.farm_id=farms._id where user_id=?");
@@ -221,21 +230,25 @@ public class DAO {
         return farmList.toArray(new Farm[farmList.size()]);
     }
 
-    public synchronized boolean insertActivityData(Activity activity) {
+    public static synchronized boolean insertActivityData(Activity activity) {
+        PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("INSERT INTO activities('_id','farmId','userId','date','action','type','unit','quantity','row','field') VALUES(?,?,?,?,?,?,?,?,?,?)");
-            statement.setString(0, activity.get_id());
-            statement.setString(1, activity.getFarmId());
-            statement.setString(2, activity.getUserId());
-            statement.setString(3, activity.getDate());
-            statement.setString(4, activity.getAction());
-            statement.setString(5, activity.getType());
-            statement.setString(6, activity.getUnit());
-            statement.setDouble(7, activity.getQuantity());
-            statement.setInt(8, activity.getRow());
+            statement = connection.prepareStatement("INSERT INTO activities(_id,farmId,userId,date,action,type,unit,quantity,field,row) VALUES(?,?,?,?,?,?,?,?,?,?)");
+            statement.setString(1, activity.get_id());
+            statement.setString(2, activity.getFarmId());
+            statement.setString(3, activity.getUserId());
+            statement.setString(4, activity.getDate());
+            statement.setString(5, activity.getAction());
+            statement.setString(6, activity.getType());
+            statement.setString(7, activity.getUnit());
+            statement.setDouble(8, activity.getQuantity());
             statement.setInt(9, activity.getField());
+            statement.setInt(10, activity.getRow());
+            System.out.println("DBDBDBD");
             statement.executeUpdate();
+            System.out.println("DONEDONEDONEDONE");
             connection.commit();
+            System.out.println("Success");
             return true;
         } catch (SQLException e) {
             try {
@@ -249,6 +262,7 @@ public class DAO {
     }
 
     public List<Activity> getActivityByFarmId(String farmId) {
+        PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM user_farm where farmId=?");
@@ -275,6 +289,7 @@ public class DAO {
     }
 
     public List<Activity> getActivityByFarmerId(String userId) {
+        PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM user_farm where userId=?");

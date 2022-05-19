@@ -81,8 +81,7 @@ public class Farmer implements Runnable {
         this.farmList = farmList;
     }
 
-    public void generateActivity(Farm farm, int id){
-        String activityId = "A"+(id+1);
+    public void generateActivity(Farm farm){
         int field = (int)(Math.random()*farm.getField());
         int row = (int)(Math.random()*farm.getRow());
         Status status = farm.getStatusByRowAndField(row,field);
@@ -103,17 +102,17 @@ public class Farmer implements Runnable {
                 String type;
                 String unit;
                 switch (action) {
-                    case "Sowing", "Harvesting" -> {
+                    case "sowing", "harvest", "sales" -> {
                         int plantIndex = (int) (Math.random() * (farm.getPlants().length));
                         type = farm.getPlants()[plantIndex].getName();
                         unit = farm.getPlants()[plantIndex].getUnitType();
                     }
-                    case "Fertilizer" -> {
+                    case "fertilizer" -> {
                         int fertilizerIndex = (int) (Math.random() * (farm.getFertilizes().length));
                         type = farm.getFertilizes()[fertilizerIndex].getName();
                         unit = farm.getFertilizes()[fertilizerIndex].getUnitType();
                     }
-                    case "Pesticide" -> {
+                    case "pesticide" -> {
                         int pesticideIndex = (int) (Math.random() * (farm.getPesticides().length));
                         type = farm.getPesticides()[pesticideIndex].getName();
                         unit = farm.getPesticides()[pesticideIndex].getUnitType();
@@ -124,7 +123,7 @@ public class Farmer implements Runnable {
                     }
                 }
 
-                Activity activity = new Activity(activityId, farm.get_id(), this._id, Timer.getCurrentTime(), action, type, unit,Math.random()*10, field, row);
+                Activity activity = new Activity(farm.get_id(), this._id, Timer.getCurrentTime(), action, type, unit,Math.random()*10, field, row);
 //                activity.setFarmId(farm.get_id());
 //                activity.setUserId(this._id);
 //                activity.setDate(Timer.getCurrentTime());
@@ -139,7 +138,7 @@ public class Farmer implements Runnable {
 
                 //switch the action of current row and field to the next action
                 //when action is harvesting, the action will change to null
-                if (action.equals("Harvesting")){
+                if (action.equals("sales")){
                     status.setAction(null);
                 }else{
                     status.setAction(action);
@@ -163,7 +162,8 @@ public class Farmer implements Runnable {
         // Create how many number of activity each farm must have
         Map<String, Integer> farmNumberActivity = new HashMap<>();
         for (Farm farm : farmList) {
-            int randNum = (int) Math.floor(Math.random() * (1500 - 1000 + 1) + 1000);
+//            int randNum = (int) Math.floor(Math.random() * (1500 - 1000 + 1) + 100);
+            int randNum = 1;
             totalActNum += randNum;
             farmNumberActivity.put(farm.get_id(), randNum);
         }
@@ -175,10 +175,11 @@ public class Farmer implements Runnable {
             int currentFarm = (int) Math.floor(Math.random() * (farmList.length));
 
             //When the number of activity is cleared
-            if(farmNumberActivity.get(farmList[currentFarm].get_id()) <= 0){
-                i--;
-            }else {
-                generateActivity(farmList[currentFarm],i);
+            generateActivity(farmList[currentFarm]);
+            if(farmNumberActivity.get(farmList[currentFarm].get_id()) == 1){
+                farmNumberActivity.remove(farmList[currentFarm].get_id());
+            }
+            else {
                 farmNumberActivity.put(farmList[currentFarm].get_id(), (farmNumberActivity.get(farmList[currentFarm].get_id()) - 1));
             }
         }

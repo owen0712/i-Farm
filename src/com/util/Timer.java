@@ -13,7 +13,7 @@ public class Timer {
     private final String FAKE_START_TIME = "2022.05.01.00.00.00"; // Set a start fake time
 
     private int disasterTime; //Random generated in second, using setter method to set
-    private boolean isEnd;
+    private static boolean isEnd;
 
     public static String getCurrentTime() {
         return sdf.format(new Date());
@@ -39,7 +39,7 @@ public class Timer {
         }
     }
 
-    public boolean isEnd() {
+    public static boolean isEnd() {
         return isEnd;
     }
 

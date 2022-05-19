@@ -15,12 +15,10 @@ public class DataHandling implements Runnable {
 
     public static Queue<DataEntryWorker> processActivities;
     private ExecutorService threadPool;
-    private Timer timer;
-    private static int activityId;
+    private static volatile int activityId;
 
-    public DataHandling(Timer timer) {
+    public DataHandling() {
         this.threadPool = Executors.newCachedThreadPool();
-        this.timer = timer;
         this.processActivities = new LinkedList<DataEntryWorker>();
         this.activityId = 1;
     }
@@ -35,8 +33,9 @@ public class DataHandling implements Runnable {
     public void run() {
         while (true) {
             if (!processActivities.isEmpty()) {
+                System.out.println("CHICKYCHACHABOOMBOOM");
                 threadPool.submit(processActivities.poll());
-            } else if (timer.isEnd()) {
+            } else if (Timer.isEnd()) {
                 break;
             }
         }
