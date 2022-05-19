@@ -39,9 +39,6 @@ public class DataHandling implements Runnable {
                 break;
             }
         }
-        threadPool.isShutdown();
-        while(!threadPool.isTerminated()){
-
-        }
+        threadPool.shutdown();
     }
 }
