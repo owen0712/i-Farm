@@ -160,26 +160,28 @@ public class Farmer implements Runnable {
         int totalActNum = 0;
 
         // Create how many number of activity each farm must have
-        Map<String, Integer> farmNumberActivity = new HashMap<>();
+        Map<Farm, Integer> farmNumberActivity = new HashMap<>();
         for (Farm farm : farmList) {
             int randNum = (int) Math.floor(Math.random() * (1500 - 1000 + 1) + 100);
             totalActNum += randNum;
-            farmNumberActivity.put(farm.get_id(), randNum);
+            farmNumberActivity.put(farm, randNum);
         }
 
         // Start for loop
         for (int i = 0; i < totalActNum; i++) {
 
             // Farmer randomly pick one farm
-            int currentFarm = (int) Math.floor(Math.random() * (farmList.length));
+            int currentFarm = (int) Math.floor(Math.random() * (farmNumberActivity.size()));
+
 
             //When the number of activity is cleared
-            generateActivity(farmList[currentFarm]);
-            if(farmNumberActivity.get(farmList[currentFarm].get_id()) == 1){
-                farmNumberActivity.remove(farmList[currentFarm].get_id());
+            Farm farm = (Farm) farmNumberActivity.keySet().toArray()[currentFarm];
+            generateActivity(farm);
+            if(farmNumberActivity.get(farm) == 1){
+                farmNumberActivity.remove(farm);
             }
             else {
-                farmNumberActivity.put(farmList[currentFarm].get_id(), (farmNumberActivity.get(farmList[currentFarm].get_id()) - 1));
+                farmNumberActivity.put(farm, (farmNumberActivity.get(farm) - 1));
             }
         }
     }
