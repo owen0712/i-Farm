@@ -30,7 +30,7 @@ public class DAO {
     public void deleteAllActivityRecord(){
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("DELETE * FROM activities");
+            statement = connection.prepareStatement("TRUNCATE activities");
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -233,7 +233,7 @@ public class DAO {
     public static synchronized boolean insertActivityData(Activity activity) {
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("INSERT INTO activities(_id,farmId,userId,date,action,type,unit,quantity,field,row) VALUES(?,?,?,?,?,?,?,?,?,?)");
+            statement = connection.prepareStatement("INSERT INTO activities(_id,farmId,userId,date,action,type,unit,quantity,field,farm_row) VALUES(?,?,?,?,?,?,?,?,?,?)");
             statement.setString(1, activity.get_id());
             statement.setString(2, activity.getFarmId());
             statement.setString(3, activity.getUserId());
@@ -257,6 +257,8 @@ public class DAO {
                 s.printStackTrace();
             }
             e.printStackTrace();
+            IFarmLogger logger=new IFarmLogger();
+            logger.logActivities(e.getMessage());
             return false;
         }
     }

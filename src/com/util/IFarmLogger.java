@@ -39,6 +39,18 @@ public class IFarmLogger {
         }
     }
 
+    public IFarmLogger(){
+        logger = Logger.getLogger(DAO.class.getName());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        try {
+            fileHandler = new FileHandler("log/error.txt", true);
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void logActivities(String text){
         logger.info(text);
         fileHandler.close();

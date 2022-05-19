@@ -23,10 +23,10 @@ public class DataHandling implements Runnable {
         this.activityId = 1;
     }
 
-    public static void addElementIntoQueue(Activity activity) {
+    public synchronized static void addElementIntoQueue(Activity activity) {
         activity.set_id("A"+activityId);
-        processActivities.add(new DataEntryWorker(activity));
         activityId++;
+        processActivities.add(new DataEntryWorker(activity));
     }
 
     @Override

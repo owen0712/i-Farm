@@ -13,8 +13,7 @@ public class Activity {
     private Integer field;
     private Integer row;
 
-    public Activity(String _id, String farmId, String userId, String date, String action, String type, String unit, Double quantity, Integer field, Integer row) {
-        this._id = _id;
+    public Activity(String farmId, String userId, String date, String action, String type, String unit, Double quantity, Integer field, Integer row) {
         this.farmId = farmId;
         this.userId = userId;
         this.date = date;
@@ -107,5 +106,21 @@ public class Activity {
 
     public void setRow(Integer row) {
         this.row = row;
+    }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "_id='" + _id + '\'' +
+                ", farmId='" + farmId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", date='" + date + '\'' +
+                ", action='" + action + '\'' +
+                ", type='" + type + '\'' +
+                ", unit='" + unit + '\'' +
+                ", quantity=" + quantity +
+                ", field=" + field +
+                ", row=" + row +
+                '}';
     }
 }

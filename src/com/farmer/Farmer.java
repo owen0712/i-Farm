@@ -162,8 +162,7 @@ public class Farmer implements Runnable {
         // Create how many number of activity each farm must have
         Map<String, Integer> farmNumberActivity = new HashMap<>();
         for (Farm farm : farmList) {
-//            int randNum = (int) Math.floor(Math.random() * (1500 - 1000 + 1) + 100);
-            int randNum = 1;
+            int randNum = (int) Math.floor(Math.random() * (1500 - 1000 + 1) + 100);
             totalActNum += randNum;
             farmNumberActivity.put(farm.get_id(), randNum);
         }
