@@ -1,6 +1,7 @@
 package com.main;
 
 import com.dataHandling.DataHandling;
+import com.farm.Farm;
 import com.farmer.Farmer;
 import com.util.DAO;
 import com.util.Timer;
@@ -11,10 +12,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
-
+    public static Farm[] farms;
     public static void main(String[] args) throws InterruptedException {
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
+
+        // getting farms from db
+        farms = dao.getFarmData();
+
         Thread dataHandlingThread = new Thread(new DataHandling());
         dataHandlingThread.start();
         Random random = new Random();
@@ -23,10 +28,12 @@ public class Main {
         ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
         FarmerSimulator simulator = new FarmerSimulator();
         Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
+
         Timer timer = new Timer();
         timer.setDisasterTime(15);
         TimerThread timerThread = new TimerThread(timer);
         timerThread.start();
+
         for (Farmer farmer : farmers) {
             farmerThreadPool.execute(farmer);
         }
@@ -36,32 +43,5 @@ public class Main {
         }
         timer.setEnd(true);
         System.out.println("All thread have been terminated");
-
-        // I did another version using threadPool see see
-//        Random random = new Random();
-//        int randFarmer = random.nextInt(0)+100;
-//        ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randFarmer);
-//        Farmer[]farmers=simulator.generateFarmers(randFarmer);
-//        for(Farmer farmer:farmers){
-//            Thread farmerThread=new Thread(farmer);
-//            farmerThreadPool.execute(farmer);
-//        }
-//        ThreadPool.shutdown();
-//        while(true){
-//            if(ThreadPool.isTerminated()){
-//                Timer.setEnd(true);
-//                break;
-//            }
-//        }
-
-        // How to create TimerThread
-//        Timer timer = new Timer();
-//        timer.setDisasterTime(15);
-//        TimerThread timerThread = new TimerThread(timer);
-//        timerThread.start();
-//        for(int i = 0; i < 10; i++){ // Just a testing
-//            System.out.println(timer.getFakeTime());
-//            Thread.sleep(1000);
-//        }
     }
 }
