@@ -9,6 +9,8 @@ import com.util.Timer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class Farmer implements Runnable {
 
@@ -87,9 +89,7 @@ public class Farmer implements Runnable {
         Status status = farm.getStatusByRowAndField(row,field);
         String action;
 
-        while (!status.getLock().isHeldByCurrentThread()){
-            //check if the thread can lock the row and field
-            if (status.getLock().tryLock()){
+
                 status.getLock().lock();
 
                 //check the row and field current action and decide the next action
@@ -133,9 +133,18 @@ public class Farmer implements Runnable {
 //                activity.setQuantity(Math.random()*10);
 //                activity.setField(field);
 //                activity.setRow(row);
-                System.out.println(activity);
-                DataHandling.addElementIntoQueue(activity);
+                Future<Boolean> success=DataHandling.addElementIntoQueue(activity);
 
+                while(true){
+                    try {
+                        if (!!success.get()) break;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                }
                 //switch the action of current row and field to the next action
                 //when action is harvesting, the action will change to null
                 if (action.equals("sales")){
@@ -146,13 +155,14 @@ public class Farmer implements Runnable {
 
                 //log in to logfile
                 //format: (Sowing Plant Field 1 Row 1 1.5 UnitType at FarmName 2022-05-18)
-                logger = new IFarmLogger(this);
-                logger.logActivities(activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.get_id()+" "+activity.getDate());
+                if(logger==null) {
+                    logger = new IFarmLogger(this);
+                }
+                logger.logFarmerActivities(activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.get_id()+" "+activity.getDate());
                 status.getLock().unlock();
-                break;
+
             }
-        }
-    }
+
 
 
     @Override
@@ -162,7 +172,7 @@ public class Farmer implements Runnable {
         // Create how many number of activity each farm must have
         Map<Farm, Integer> farmNumberActivity = new HashMap<>();
         for (Farm farm : farmList) {
-            int randNum = (int) Math.floor(Math.random() * (1500 - 1000 + 1) + 100);
+            int randNum = (int) Math.floor(Math.random() * (1500 - 1000 + 1) + 1000);
             totalActNum += randNum;
             farmNumberActivity.put(farm, randNum);
         }

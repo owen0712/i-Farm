@@ -27,11 +27,12 @@ public class DAO {
         }
     }
 
-    public void deleteAllActivityRecord(){
+    public void deleteAllActivityRecord() {
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement("TRUNCATE activities");
-            statement.execute();
+            statement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -244,11 +245,8 @@ public class DAO {
             statement.setDouble(8, activity.getQuantity());
             statement.setInt(9, activity.getField());
             statement.setInt(10, activity.getRow());
-            System.out.println("DBDBDBD");
             statement.executeUpdate();
-            System.out.println("DONEDONEDONEDONE");
             connection.commit();
-            System.out.println("Success");
             return true;
         } catch (SQLException e) {
             try {
@@ -257,8 +255,8 @@ public class DAO {
                 s.printStackTrace();
             }
             e.printStackTrace();
-            IFarmLogger logger=new IFarmLogger();
-            logger.logActivities(e.getMessage());
+            IFarmLogger logger = new IFarmLogger();
+            logger.logErrorMessage(e.getMessage());
             return false;
         }
     }

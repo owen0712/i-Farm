@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 
 public class Main {
 
-    public static void main(String[]args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
         Thread dataHandlingThread = new Thread(new DataHandling());
@@ -22,17 +22,17 @@ public class Main {
         int randomFarmerNumber = 100;
         ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
         FarmerSimulator simulator = new FarmerSimulator();
-        Farmer[]farmers=simulator.generateFarmers(randomFarmerNumber);
+        Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
         Timer timer = new Timer();
         timer.setDisasterTime(15);
         TimerThread timerThread = new TimerThread(timer);
         timerThread.start();
-        for(Farmer farmer:farmers){
+        for (Farmer farmer : farmers) {
             farmerThreadPool.execute(farmer);
         }
         farmerThreadPool.shutdown();
-        while(!farmerThreadPool.isTerminated()){
-         //wait all farmer finish job
+        while (!farmerThreadPool.isTerminated()) {
+            //wait all farmer finish job
         }
         timer.setEnd(true);
         System.out.println("All thread have been terminated");
