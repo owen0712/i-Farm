@@ -137,10 +137,8 @@ public class Farmer implements Runnable {
 
                 while(true){
                     try {
-                        if (!!success.get()) break;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                        if (success.get()) break;
+                    } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
 
