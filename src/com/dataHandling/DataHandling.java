@@ -32,7 +32,7 @@ public class DataHandling implements Runnable {
     @Override
     public void run() {
         while (true) {
-            if (!processActivities.isEmpty() && !Timer.isEnd()) {
+            if (!processActivities.isEmpty()) {
                 System.out.println("CHICKYCHACHABOOMBOOM");
                 threadPool.submit(processActivities.poll());
             } else if (Timer.isEnd()&&processActivities.isEmpty()) {
