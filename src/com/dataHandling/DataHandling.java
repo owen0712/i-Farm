@@ -35,7 +35,7 @@ public class DataHandling implements Runnable {
             if (!processActivities.isEmpty() && !Timer.isEnd()) {
                 System.out.println("CHICKYCHACHABOOMBOOM");
                 threadPool.submit(processActivities.poll());
-            } else if (Timer.isEnd()) {
+            } else if (Timer.isEnd()&&processActivities.isEmpty()) {
                 break;
             }
         }

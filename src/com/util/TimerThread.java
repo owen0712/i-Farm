@@ -15,6 +15,9 @@ public class TimerThread extends Thread{
             if(timer.isDisasterTime()){
                 break;
             }
+            if(Timer.isEnd()){
+                break;
+            }
         }
     }
 }

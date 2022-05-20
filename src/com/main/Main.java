@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[]args) throws InterruptedException {
         DAO dao = new DAO();
-//        dao.deleteAllActivityRecord();
+        dao.deleteAllActivityRecord();
         Thread dataHandlingThread = new Thread(new DataHandling());
         dataHandlingThread.start();
         Random random = new Random();
