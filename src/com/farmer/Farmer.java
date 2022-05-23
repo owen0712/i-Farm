@@ -89,79 +89,65 @@ public class Farmer implements Runnable {
         Status status = farm.getStatusByRowAndField(row,field);
         String action;
 
+        status.getLock().lock();
+        //check the row and field current action and decide the next action
+        if(status.getAction()==null){
+            action = this.actionList[0];
+        }else{
+            action = this.actionList[(int)(Math.random()*(this.actionList.length-1)+1)];
+        }
 
-                status.getLock().lock();
-
-                //check the row and field current action and decide the next action
-                if(status.getAction()==null){
-                    action = this.actionList[0];
-                }else{
-                    action = this.actionList[(int)(Math.random()*(this.actionList.length-1)+1)];
-                }
-
-                String type;
-                String unit;
-                switch (action) {
-                    case "sowing", "harvest", "sales" -> {
-                        int plantIndex = (int) (Math.random() * (farm.getPlants().length));
-                        type = farm.getPlants()[plantIndex].getName();
-                        unit = farm.getPlants()[plantIndex].getUnitType();
-                    }
-                    case "fertilizer" -> {
-                        int fertilizerIndex = (int) (Math.random() * (farm.getFertilizes().length));
-                        type = farm.getFertilizes()[fertilizerIndex].getName();
-                        unit = farm.getFertilizes()[fertilizerIndex].getUnitType();
-                    }
-                    case "pesticide" -> {
-                        int pesticideIndex = (int) (Math.random() * (farm.getPesticides().length));
-                        type = farm.getPesticides()[pesticideIndex].getName();
-                        unit = farm.getPesticides()[pesticideIndex].getUnitType();
-                    }
-                    default -> {
-                        type = "N/A";
-                        unit = "N/A";
-                    }
-                }
-
-                Activity activity = new Activity(farm.get_id(), this._id, Timer.getCurrentTime(), action, type, unit,Math.random()*10, field, row);
-//                activity.setFarmId(farm.get_id());
-//                activity.setUserId(this._id);
-//                activity.setDate(Timer.getCurrentTime());
-//                activity.setAction(action);
-//                activity.setType(type);
-//                activity.setUnit(unit);
-//                activity.setQuantity(Math.random()*10);
-//                activity.setField(field);
-//                activity.setRow(row);
-                Future<Boolean> success=DataHandling.addElementIntoQueue(activity);
-
-                while(true){
-                    try {
-                        if (success.get()) break;
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                //switch the action of current row and field to the next action
-                //when action is harvesting, the action will change to null
-                if (action.equals("sales")){
-                    status.setAction(null);
-                }else{
-                    status.setAction(action);
-                }
-
-                //log in to logfile
-                //format: (Sowing Plant Field 1 Row 1 1.5 UnitType at FarmName 2022-05-18)
-                if(logger==null) {
-                    logger = new IFarmLogger(this);
-                }
-                logger.logFarmerActivities(activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.get_id()+" "+activity.getDate());
-                status.getLock().unlock();
-
+        String type;
+        String unit;
+        switch (action) {
+            case "sowing", "harvest", "sales" -> {
+                int plantIndex = (int) (Math.random() * (farm.getPlants().length));
+                type = farm.getPlants()[plantIndex].getName();
+                unit = farm.getPlants()[plantIndex].getUnitType();
             }
+            case "fertilizer" -> {
+                int fertilizerIndex = (int) (Math.random() * (farm.getFertilizes().length));
+                type = farm.getFertilizes()[fertilizerIndex].getName();
+                unit = farm.getFertilizes()[fertilizerIndex].getUnitType();
+            }
+            case "pesticide" -> {
+                int pesticideIndex = (int) (Math.random() * (farm.getPesticides().length));
+                type = farm.getPesticides()[pesticideIndex].getName();
+                unit = farm.getPesticides()[pesticideIndex].getUnitType();
+            }
+            default -> {
+                type = "N/A";
+                unit = "N/A";
+            }
+        }
 
+        Activity activity = new Activity(farm.get_id(), this._id, Timer.getCurrentTime(), action, type, unit,Math.random()*10, field, row);
+        Future<Boolean> success=DataHandling.addElementIntoQueue(activity);
 
+        while(true){
+            try {
+                if (!!success.get()) break;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        //switch the action of current row and field to the next action
+        //when action is harvesting, the action will change to null
+        if (action.equals("sales")){
+            status.setAction(null);
+        }else{
+            status.setAction(action);
+        }
+        //log in to logfile
+        //format: (Sowing Plant Field 1 Row 1 1.5 UnitType at FarmName 2022-05-18)
+        if(logger==null) {
+            logger = new IFarmLogger(this);
+        }
+        logger.logFarmerActivities(Timer.getFakeTime()+": "+activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.get_id()+" "+activity.getDate());
+        status.getLock().unlock();
+    }
 
     @Override
     public void run() {
@@ -170,7 +156,8 @@ public class Farmer implements Runnable {
         // Create how many number of activity each farm must have
         Map<Farm, Integer> farmNumberActivity = new HashMap<>();
         for (Farm farm : farmList) {
-            int randNum = (int) Math.floor(Math.random() * (1500 - 1000 + 1) + 1000);
+//            int randNum = (int) Math.floor(Math.random() * (500) + 1 + 1000);
+            int randNum = 100;
             totalActNum += randNum;
             farmNumberActivity.put(farm, randNum);
         }

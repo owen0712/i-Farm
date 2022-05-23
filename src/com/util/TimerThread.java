@@ -12,9 +12,9 @@ public class TimerThread extends Thread {
     public void run() {
         while (!Timer.isEnd()) {
             timer.updateTime();
-            if (timer.isDisasterTime()) {
-                break;
-            }
+//            if (timer.isDisasterTime()) {
+//                break;
+//            }
         }
         System.out.println("Timer Thread End");
     }

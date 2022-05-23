@@ -108,19 +108,4 @@ public class Activity {
         this.row = row;
     }
 
-    @Override
-    public String toString() {
-        return "Activity{" +
-                "_id='" + _id + '\'' +
-                ", farmId='" + farmId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", date='" + date + '\'' +
-                ", action='" + action + '\'' +
-                ", type='" + type + '\'' +
-                ", unit='" + unit + '\'' +
-                ", quantity=" + quantity +
-                ", field=" + field +
-                ", row=" + row +
-                '}';
-    }
 }
