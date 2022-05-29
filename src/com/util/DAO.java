@@ -11,12 +11,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DAO {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/ifarm";
     private final String username = "root";
     private final String password = "root";
     private static Connection connection;
+    private static AtomicInteger activityId = new AtomicInteger(1);
 
     public DAO() {
         try {
@@ -234,6 +236,8 @@ public class DAO {
     public static synchronized boolean insertActivityData(Activity activity) {
         PreparedStatement statement;
         try {
+            activity.set_id("A" + activityId.get());
+            activityId.getAndAdd(1);
             statement = connection.prepareStatement("INSERT INTO activities(_id,farmId,userId,date,action,type,unit,quantity,field,farm_row) VALUES(?,?,?,?,?,?,?,?,?,?)");
             statement.setString(1, activity.get_id());
             statement.setString(2, activity.getFarmId());

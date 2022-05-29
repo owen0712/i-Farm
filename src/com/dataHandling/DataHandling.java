@@ -11,20 +11,17 @@ import com.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DataHandling implements Runnable {
 
-    private static ExecutorService threadPool;
-    private static volatile int activityId;
+    private ExecutorService threadPool;
 
     public DataHandling() {
         this.threadPool = Executors.newFixedThreadPool(100);
-        this.activityId = 1;
     }
 
-    public synchronized static Future<Boolean> addElementIntoQueue(Activity activity) {
-        activity.set_id("A" + activityId);
-        activityId++;
+    public synchronized Future<Boolean> addElementIntoQueue(Activity activity) {
         return threadPool.submit(new DataEntryWorker(activity));
     }
 
