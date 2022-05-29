@@ -1,12 +1,8 @@
 package com.farm;
 
-import com.activity.Activity;
-import com.dataHandling.DataHandling;
 import com.fertilizer.Fertilizer;
 import com.pesticide.Pesticide;
 import com.plant.Plant;
-
-import java.util.concurrent.Future;
 
 public class Farm {
 
@@ -19,18 +15,16 @@ public class Farm {
     private int row;
     private int field;
     private Status[][] status;
-    private DataHandling dataHandling;
 
     public Farm() {
         this.row = (int) (Math.random() * 11 + 10);   // total number of row 10 - 20
         this.field = (int) (Math.random() * 11 + 10); // total number of field 10 - 20
         status = new Status[this.row][this.field];
         initializeStatus();
-        this.dataHandling = new DataHandling();
     }
 
     // Maybe will not use this constructor, basically the data will directly get from DAO
-    public Farm(String _id, String name, String address, Pesticide[] pesticides, Fertilizer[] fertilizes, Plant[] plants, int row, int field, Status[][] status, DataHandling dataHandling) {
+    public Farm(String _id, String name, String address, Pesticide[] pesticides, Fertilizer[] fertilizes, Plant[] plants, int row, int field, Status[][] status) {
         this._id = _id;
         this.name = name;
         this.address = address;
@@ -44,7 +38,6 @@ public class Farm {
         this.field = (int) (Math.random() * 11 + 10); // total number of field 10 - 20
         status = new Status[this.row][this.field];
         initializeStatus();
-        this.dataHandling = dataHandling;
     }
 
     public String get_id() {
@@ -117,10 +110,6 @@ public class Farm {
 
     public void setStatusByRowAndField(int row, int field, Status status) {
         this.status[row][field] = status;
-    }
-
-    public Future<Boolean> addElementIntoQueue(Activity activity){
-        return this.dataHandling.addElementIntoQueue(activity);
     }
 
     private void initializeStatus() {

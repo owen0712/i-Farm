@@ -122,7 +122,7 @@ public class Farmer implements Runnable {
         }
 
         Activity activity = new Activity(farm.get_id(), this._id, Timer.getCurrentTime(), action, type, unit,Math.random()*10, field, row);
-        Future<Boolean> success = farm.addElementIntoQueue(activity);
+        Future<Boolean> success=DataHandling.addElementIntoQueue(activity);
 
         while(true){
             try {
