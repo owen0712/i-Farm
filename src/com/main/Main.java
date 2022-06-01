@@ -36,7 +36,7 @@ public class Main {
         int randomFarmerNumber = 100;
         ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
         FarmerSimulator simulator = new FarmerSimulator();
-        Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber, dao);
+        Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
         //Setup timer and timer thread
         Timer timer = new Timer();
@@ -77,7 +77,7 @@ public class Main {
         int randomFarmerNumber = 100;
         ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
         FarmerSimulator simulator = new FarmerSimulator();
-        Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber, dao);
+        Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
         //Setup timer and timer thread
         Timer timer = new Timer();

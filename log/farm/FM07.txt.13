@@ -1,8 +1,0 @@
-Jun 02, 2022 4:03:54 AM com.util.IFarmLogger logFarmActivities
-INFO: 2022.06.02.04.03.53: A105  -> sowing     European weeping birch _ Betula pendula            Field 14 Row 15   0.32kg    at FM07  2022.06.02.04.03.53 
-Jun 02, 2022 4:03:55 AM com.util.IFarmLogger logFarmActivities
-INFO: 2022.06.02.04.03.54: A219  -> pesticide  Chlor Kil                                          Field 14 Row 15   1.30l     at FM07  2022.06.02.04.03.54 
-Jun 02, 2022 4:03:56 AM com.util.IFarmLogger logFarmActivities
-INFO: 2022.06.02.04.03.55: A377  -> sowing     Mahogany birch _ Betula lenta                      Field 11 Row 12 555.95g     at FM07  2022.06.02.04.03.55 
-Jun 02, 2022 4:03:56 AM com.util.IFarmLogger logFarmActivities
-INFO: 2022.06.02.04.03.56: A574  -> sowing     Arrowwood _ Cornus florida                         Field  5 Row  9 536.49g     at FM07  2022.06.02.04.03.56 

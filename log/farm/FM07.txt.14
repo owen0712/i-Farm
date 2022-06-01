@@ -1,6 +1,0 @@
-Jun 02, 2022 4:03:54 AM com.util.IFarmLogger logFarmActivities
-INFO: 2022.06.02.04.03.54: A122  -> sowing     Foxtail amaranth _ Amaranthus caudatus             Field  1 Row 19 911.78g     at FM07  2022.06.02.04.03.54 
-Jun 02, 2022 4:03:55 AM com.util.IFarmLogger logFarmActivities
-INFO: 2022.06.02.04.03.54: A216  -> pesticide  Farmco Anizine                                     Field 13 Row  2   5.00l     at FM07  2022.06.02.04.03.54 
-Jun 02, 2022 4:03:56 AM com.util.IFarmLogger logFarmActivities
-INFO: 2022.06.02.04.03.56: A582  -> sowing     California bay _ Umbellularia californica          Field  3 Row  8 133.96g     at FM07  2022.06.02.04.03.56 
