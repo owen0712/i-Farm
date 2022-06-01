@@ -17,6 +17,7 @@ public class DAO {
     private final String username = "root";
     private final String password = "root";
     private static Connection connection;
+    private static Farm[] tempFarm;
 
     public DAO() {
         try {
@@ -204,26 +205,30 @@ public class DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return farmList.toArray(new Farm[farmList.size()]);
+        tempFarm = farmList.toArray(new Farm[farmList.size()]);
+        return tempFarm;
     }
 
     public Farm[] getFarmDataByFarmerId(String farmerId) {
         PreparedStatement statement;
         List<Farm> farmList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM user_farm INNER JOIN farms ON user_farm.farm_id=farms._id where user_id=?");
+//            statement = connection.prepareStatement("SELECT * FROM user_farm INNER JOIN farms ON user_farm.farm_id=farms._id where user_id=?");
+            statement = connection.prepareStatement("SELECT * FROM user_farm where user_id=?");
             statement.setString(1, farmerId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 //mapping result set to farms
-                Farm farm = new Farm();
-                farm.set_id(result.getString("_id"));
-                farm.setName(result.getString("name"));
-                farm.setAddress(result.getString("address"));
-                farm.setPlants(getPlantDataByFarmId(farm.get_id()));
-                farm.setFertilizes(getFertilizerDataByFarmId(farm.get_id()));
-                farm.setPesticides(getPesticideDataByFarmId(farm.get_id()));
-                farmList.add(farm);
+//                Farm farm = new Farm();
+//                farm.set_id(result.getString("_id"));
+//                farm.setName(result.getString("name"));
+//                farm.setAddress(result.getString("address"));
+//                farm.setPlants(getPlantDataByFarmId(farm.get_id()));
+//                farm.setFertilizes(getFertilizerDataByFarmId(farm.get_id()));
+//                farm.setPesticides(getPesticideDataByFarmId(farm.get_id()));
+//                farmList.add(farm);
+                int index = Integer.parseInt(result.getString("farm_id").substring(2)) - 1;
+                farmList.add(tempFarm[index]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
