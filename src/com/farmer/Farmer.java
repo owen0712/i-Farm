@@ -6,7 +6,9 @@ import com.farm.Farm;
 import com.farm.Status;
 import com.util.IFarmLogger;
 import com.util.Timer;
+import com.util.UnitConverter;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -98,30 +100,54 @@ public class Farmer implements Runnable {
         }
 
         String type;
-        String unit;
+        String unitType;
         switch (action) {
             case "sowing", "harvest", "sales" -> {
                 int plantIndex = (int) (Math.random() * (farm.getPlants().length));
                 type = farm.getPlants()[plantIndex].getName();
-                unit = farm.getPlants()[plantIndex].getUnitType();
+                unitType = farm.getPlants()[plantIndex].getUnitType();
             }
             case "fertilizer" -> {
                 int fertilizerIndex = (int) (Math.random() * (farm.getFertilizes().length));
                 type = farm.getFertilizes()[fertilizerIndex].getName();
-                unit = farm.getFertilizes()[fertilizerIndex].getUnitType();
+                unitType = farm.getFertilizes()[fertilizerIndex].getUnitType();
             }
             case "pesticide" -> {
                 int pesticideIndex = (int) (Math.random() * (farm.getPesticides().length));
                 type = farm.getPesticides()[pesticideIndex].getName();
-                unit = farm.getPesticides()[pesticideIndex].getUnitType();
+                unitType = farm.getPesticides()[pesticideIndex].getUnitType();
             }
             default -> {
                 type = "N/A";
-                unit = "N/A";
+                unitType = "N/A";
             }
         }
 
-        Activity activity = new Activity(farm.get_id(), this._id, Timer.getCurrentTime(), action, type, unit,Math.random()*10, field, row);
+        String unit;
+        double quantity;
+        // Randomly generate unit either [kg or g] for mass, [l or ml] for volume, [pack(1kg) or pack(500g)]for pack
+        // Randomly generate quantity for kg (within 10) or g (within 1000)
+        // Math.round(value*100.0)/100.0 to convert double value to two decimal
+        switch (unitType) {
+            case "mass" -> {
+                unit = (Math.random()<0.5) ? "kg" : "g";
+                quantity = (unit.equals("kg")) ? Math.round((Math.random()*10)*100.0)/100.0 : Math.round((Math.random()*1000)*100.0)/100.0;
+            }
+            case "volume" -> {
+                unit = (Math.random()<0.5) ? "l" : "ml";
+                quantity = (unit.equals("l")) ? Math.round((Math.random()*10)*100.0)/100.0 : Math.round((Math.random()*1000)*100.0)/100.0;
+            }
+            case "pack" -> {
+                unit = (Math.random()<0.5) ? "packs(1kg)" : "packs(500g)";
+                quantity = (int)(Math.random()*10+1);
+            }
+            default -> {
+                unit = "N/A";
+                quantity = -1.0;
+            }
+        }
+
+        Activity activity = new Activity(farm.get_id(), this._id, Timer.getCurrentTime(), action, type, unit, quantity, field, row);
         Future<Boolean> success=DataHandling.addElementIntoQueue(activity);
 
         while(true){
@@ -145,7 +171,9 @@ public class Farmer implements Runnable {
         if(logger==null) {
             logger = new IFarmLogger(this);
         }
-        logger.logFarmerActivities(Timer.getFakeTime()+": "+activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.get_id()+" "+activity.getDate());
+//        logger.logFarmerActivities(activity.getDate()+": "+activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.get_id()+" "+Timer.getFakeTime());
+        String logText = String.format("%s: %-5s -> %-10s %-50s Field %2d Row %2d %6.2f%-5s at %-5s %-20s", activity.getDate(), activity.get_id(), activity.getAction(), activity.getType(), activity.getField(), activity.getRow(), activity.getQuantity(), activity.getUnit(), activity.getFarmId(), activity.getDate());
+        logger.logFarmerActivities(logText);
         status.getLock().unlock();
     }
 
