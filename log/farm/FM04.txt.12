@@ -1,0 +1,4 @@
+Jun 02, 2022 4:03:54 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.54: A135  -> sowing     Red birch _ Betula nigra                           Field 11 Row 12   2.03kg    at FM04  2022.06.02.04.03.54 
+Jun 02, 2022 4:03:56 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.56: A502  -> pesticide  Buctril                                            Field 14 Row  3   1.80l     at FM04  2022.06.02.04.03.56 

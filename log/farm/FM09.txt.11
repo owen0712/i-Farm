@@ -1,0 +1,4 @@
+Jun 02, 2022 4:03:55 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.54: A204  -> sowing     Bittersweet _ Solanum dulcamara                    Field  0 Row  8 544.13g     at FM09  2022.06.02.04.03.54 
+Jun 02, 2022 4:03:55 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.55: A324  -> sowing     Foxtail amaranth _ Amaranthus caudatus             Field 11 Row  4 293.02g     at FM09  2022.06.02.04.03.55 

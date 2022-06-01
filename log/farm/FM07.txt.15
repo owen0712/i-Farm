@@ -1,0 +1,4 @@
+Jun 02, 2022 4:03:54 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.54: A131  -> sowing     Ambrosia                                           Field  0 Row 13 742.47g     at FM07  2022.06.02.04.03.54 
+Jun 02, 2022 4:03:56 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.56: A599  -> sowing     Mahogany birch _ Betula lenta                      Field  3 Row 14   0.32kg    at FM07  2022.06.02.04.03.56 

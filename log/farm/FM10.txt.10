@@ -1,0 +1,4 @@
+Jun 02, 2022 4:03:54 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.54: A160  -> harvest    California bay _ Umbellularia californica          Field  0 Row  7   0.74kg    at FM10  2022.06.02.04.03.54 
+Jun 02, 2022 4:03:56 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.55: A369  -> sowing     Ambrosia                                           Field  6 Row  9 275.49g     at FM10  2022.06.02.04.03.55 

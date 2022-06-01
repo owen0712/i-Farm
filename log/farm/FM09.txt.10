@@ -1,0 +1,6 @@
+Jun 02, 2022 4:03:55 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.54: A202  -> sowing     European ash _ Fraxinus excelsior[1]               Field 15 Row  6   3.46kg    at FM09  2022.06.02.04.03.54 
+Jun 02, 2022 4:03:55 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.55: A326  -> sowing     Indian arrowwood _ Cornus florida                  Field  6 Row  4   8.02kg    at FM09  2022.06.02.04.03.55 
+Jun 02, 2022 4:03:55 AM com.util.IFarmLogger logFarmActivities
+INFO: 2022.06.02.04.03.55: A430  -> sowing     Indian arrowwood _ Cornus florida                  Field  2 Row 10 460.17g     at FM09  2022.06.02.04.03.55 
