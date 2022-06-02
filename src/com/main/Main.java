@@ -60,6 +60,7 @@ public class Main {
         System.out.println("End Time: " + endTime);
         System.out.println("All thread have been terminated");
 
+        //Idk should i declare at timerThread there or....
         DataVisualizer dataVisualizer = new DataVisualizer();
 
         dataVisualizer.startDataVisualizer();

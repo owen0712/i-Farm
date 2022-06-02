@@ -269,7 +269,7 @@ public class DAO {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM user_farm where farmId=?");
+            statement = connection.prepareStatement("SELECT * FROM activities where farmId=?");
             statement.setString(1, farmId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -283,7 +283,7 @@ public class DAO {
                 activity.setUnit(result.getString("unit"));
                 activity.setQuantity(result.getDouble("quantity"));
                 activity.setField(result.getInt("field"));
-                activity.setRow(result.getInt("row"));
+                activity.setRow(result.getInt("farm_row"));
                 activityList.add(activity);
             }
         } catch (SQLException e) {
@@ -296,7 +296,7 @@ public class DAO {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM user_farm where userId=?");
+            statement = connection.prepareStatement("SELECT * FROM activities where userId=?");
             statement.setString(1, userId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -322,8 +322,6 @@ public class DAO {
     public List<Activity> getActivityByFarmerIdAndType(String farmId, String displayType) {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
-        System.out.println("asdasd");
-        System.out.println(displayType);
         try {
             statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=?");
             statement.setString(1, farmId);
@@ -347,7 +345,6 @@ public class DAO {
                 SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(activityList.isEmpty());
         return activityList;
     }
 
@@ -410,7 +407,6 @@ public class DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(activityList.isEmpty());
         return activityList;
     }
 }
