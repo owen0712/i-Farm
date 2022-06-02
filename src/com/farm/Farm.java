@@ -34,8 +34,8 @@ public class Farm {
         this.row = row;
         this.field = field;
         this.status = status;
-        this.row = (int) (Math.random() * 11 + 10);   // total number of row 10 - 20
-        this.field = (int) (Math.random() * 11 + 10); // total number of field 10 - 20
+        this.row = (int) (Math.random() * 5 + 5);   // total number of row 10 - 20
+        this.field = (int) (Math.random() * 5 + 5); // total number of field 10 - 20
         status = new Status[this.row][this.field];
         initializeStatus();
     }
