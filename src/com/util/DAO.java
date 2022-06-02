@@ -17,6 +17,9 @@ public class DAO {
     private final String password = "root";
     private static Connection connection;
     private static Farm[] tempFarm;
+    private static Plant[] tempPlant;
+    private static Fertilizer[] tempFertilizer;
+    private static Pesticide[] tempPesticide;
 
     public DAO() {
         try {
@@ -62,16 +65,19 @@ public class DAO {
         PreparedStatement statement;
         List<Plant> plantList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM farm_plant INNER JOIN plants ON farm_plant.plant_id=plants._id where farm_id=?");
+//            statement = connection.prepareStatement("SELECT * FROM farm_plant INNER JOIN plants ON farm_plant.plant_id=plants._id where farm_id=?");
+            statement = connection.prepareStatement("SELECT * FROM farm_plant where farm_id=?");
             statement.setString(1, farmId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 //mapping result set to plant
-                Plant plant = new Plant();
-                plant.set_id(result.getString("_id"));
-                plant.setName(result.getString("name"));
-                plant.setUnitType(result.getString("unitType"));
-                plantList.add(plant);
+//                Plant plant = new Plant();
+//                plant.set_id(result.getString("_id"));
+//                plant.setName(result.getString("name"));
+//                plant.setUnitType(result.getString("unitType"));
+//                plantList.add(plant);
+                int index = Integer.parseInt(result.getString("plant_id").substring(1)) - 1;
+                plantList.add(tempPlant[index]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,16 +109,19 @@ public class DAO {
         PreparedStatement statement;
         List<Fertilizer> fertilizerList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM farm_fertilizer INNER JOIN fertilizers ON farm_fertilizer.fertilizer_id=fertilizers._id where farm_id=?");
+//            statement = connection.prepareStatement("SELECT * FROM farm_fertilizer INNER JOIN fertilizers ON farm_fertilizer.fertilizer_id=fertilizers._id where farm_id=?");
+            statement = connection.prepareStatement("SELECT * FROM farm_fertilizer where farm_id=?");
             statement.setString(1, farmId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 //mapping result set to fertilizer
-                Fertilizer fertilizer = new Fertilizer();
-                fertilizer.set_id(result.getString("_id"));
-                fertilizer.setName(result.getString("name"));
-                fertilizer.setUnitType(result.getString("unitType"));
-                fertilizerList.add(fertilizer);
+//                Fertilizer fertilizer = new Fertilizer();
+//                fertilizer.set_id(result.getString("_id"));
+//                fertilizer.setName(result.getString("name"));
+//                fertilizer.setUnitType(result.getString("unitType"));
+//                fertilizerList.add(fertilizer);
+                int index = Integer.parseInt(result.getString("fertilizer_id").substring(1)) - 1;
+                fertilizerList.add(tempFertilizer[index]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -144,16 +153,19 @@ public class DAO {
         PreparedStatement statement;
         List<Pesticide> pesticideList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM farm_pesticide INNER JOIN pesticides ON farm_pesticide.pesticide_id=pesticides._id where farm_id=?");
+//            statement = connection.prepareStatement("SELECT * FROM farm_pesticide INNER JOIN pesticides ON farm_pesticide.pesticide_id=pesticides._id where farm_id=?");
+            statement = connection.prepareStatement("SELECT * FROM farm_pesticide where farm_id=?");
             statement.setString(1, farmId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 //mapping result set to pesticide
-                Pesticide pesticide = new Pesticide();
-                pesticide.set_id(result.getString("_id"));
-                pesticide.setName(result.getString("name"));
-                pesticide.setUnitType(result.getString("unitType"));
-                pesticideList.add(pesticide);
+//                Pesticide pesticide = new Pesticide();
+//                pesticide.set_id(result.getString("_id"));
+//                pesticide.setName(result.getString("name"));
+//                pesticide.setUnitType(result.getString("unitType"));
+//                pesticideList.add(pesticide);
+                int index = Integer.parseInt(result.getString("pesticide_id").substring(2)) - 1;
+                pesticideList.add(tempPesticide[index]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -185,6 +197,8 @@ public class DAO {
     }
 
     public Farm[] getFarmData() {
+        //Here get the all plant data, fertilizer, pesticide data;
+        getAll();
         PreparedStatement statement;
         List<Farm> farmList = new ArrayList<>();
         try {
@@ -206,6 +220,12 @@ public class DAO {
         }
         tempFarm = farmList.toArray(new Farm[farmList.size()]);
         return tempFarm;
+    }
+
+    public void getAll(){
+        tempPlant = getPlantData();
+        tempFertilizer = getFertilizerData();
+        tempPesticide = getPesticideData();
     }
 
     public Farm[] getFarmDataByFarmerId(String farmerId) {

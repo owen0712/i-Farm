@@ -72,7 +72,7 @@ public class Main {
         dao.deleteAllActivityRecord();
 
         //Getting farms from db
-        farms = dao.getFarmData();
+//        farms = dao.getFarmData();
 
         //Start data handling thread
         Thread dataHandlingThread = new Thread(new DataHandling());
