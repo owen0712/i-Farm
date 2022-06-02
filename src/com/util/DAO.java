@@ -9,6 +9,7 @@ import com.plant.Plant;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DAO {
@@ -310,107 +311,12 @@ public class DAO {
                 activity.setUnit(result.getString("unit"));
                 activity.setQuantity(result.getDouble("quantity"));
                 activity.setField(result.getInt("field"));
-                activity.setRow(result.getInt("farm_row"));
+                activity.setRow(result.getInt("row"));
                 activityList.add(activity);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return activityList;
-    }
-
-    public List<Activity> getActivityByFarmerIdAndType(String farmId, String displayType) {
-        PreparedStatement statement;
-        List<Activity> activityList = new ArrayList<>();
-        System.out.println("asdasd");
-        System.out.println(displayType);
-        try {
-            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=?");
-            statement.setString(1, farmId);
-            statement.setString(2, displayType);
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                //mapping result set to activity
-                Activity activity = new Activity();
-                activity.setFarmId(result.getString("farmId"));
-                activity.setUserId(result.getString("userId"));
-                activity.setDate(result.getString("date"));
-                activity.setAction(result.getString("action"));
-                activity.setType(result.getString("type"));
-                activity.setUnit(result.getString("unit"));
-                activity.setQuantity(result.getDouble("quantity"));
-                activity.setField(result.getInt("field"));
-                activity.setRow(result.getInt("farm_row"));
-                activityList.add(activity);
-            }
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println(activityList.isEmpty());
-        return activityList;
-    }
-
-    public List<Activity> getActivityByFarmerIdAndTypeBetweenDate(String farmId, String displayType, String date1, String date2) {
-        PreparedStatement statement;
-        List<Activity> activityList = new ArrayList<>();
-        try {
-            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=? and date BETWEEN ? and ?");
-            statement.setString(1, farmId);
-            statement.setString(2, displayType);
-            statement.setString(3, date1);
-            statement.setString(4, date2);
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                //mapping result set to activity
-                Activity activity = new Activity();
-                activity.setFarmId(result.getString("farmId"));
-                activity.setUserId(result.getString("userId"));
-                activity.setDate(result.getString("date"));
-                activity.setAction(result.getString("action"));
-                activity.setType(result.getString("type"));
-                activity.setUnit(result.getString("unit"));
-                activity.setQuantity(result.getDouble("quantity"));
-                activity.setField(result.getInt("field"));
-                activity.setRow(result.getInt("farm_row"));
-                activityList.add(activity);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return activityList;
-    }
-
-    public List<Activity> getActivityByFarmerIdAndTypeBetweenDateWithFieldRow(String farmId, String displayType, String date1, String date2, int field, int row) {
-        PreparedStatement statement;
-        List<Activity> activityList = new ArrayList<>();
-        try {
-            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=? and field=? and farm_row=? and date BETWEEN ? and ?");
-            statement.setString(1, farmId);
-            statement.setString(2, displayType);
-            statement.setInt(3, field);
-            statement.setInt(4, row);
-            statement.setString(5, date1);
-            statement.setString(6, date2);
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                //mapping result set to activity
-                Activity activity = new Activity();
-                activity.setFarmId(result.getString("farmId"));
-                activity.setUserId(result.getString("userId"));
-                activity.setDate(result.getString("date"));
-                activity.setAction(result.getString("action"));
-                activity.setType(result.getString("type"));
-                activity.setUnit(result.getString("unit"));
-                activity.setQuantity(result.getDouble("quantity"));
-                activity.setField(result.getInt("field"));
-                activity.setRow(result.getInt("farm_row"));
-                activityList.add(activity);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println(activityList.isEmpty());
         return activityList;
     }
 }
