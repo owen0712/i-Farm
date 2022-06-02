@@ -1,6 +1,7 @@
 package com.main;
 
 import com.dataHandling.DataHandling;
+import com.dataVisualization.DataVisualizer;
 import com.farm.Farm;
 import com.farmer.Farmer;
 import com.util.DAO;
@@ -14,11 +15,12 @@ import java.util.concurrent.Executors;
 
 public class Main {
     public static Farm[] farms;
+
     public static void main(String[] args) throws InterruptedException {
         sequential();
     }
 
-    public static void sequential(){
+    public static void sequential() {
         //Delete previous activity record
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
@@ -43,7 +45,7 @@ public class Main {
 //        timer.setDisasterTime(15);
         TimerThread timerThread = new TimerThread(timer);
         timerThread.start();
-        String startTime=Timer.getCurrentTime();
+        String startTime = Timer.getCurrentTime();
 
         //Start farmer thread
         for (Farmer farmer : farmers) {
@@ -53,13 +55,17 @@ public class Main {
         timer.setEnd(true);
 
         //Record End Time
-        String endTime=Timer.getCurrentTime();
-        System.out.println("Start Time: "+startTime);
-        System.out.println("End Time: "+endTime);
+        String endTime = Timer.getCurrentTime();
+        System.out.println("Start Time: " + startTime);
+        System.out.println("End Time: " + endTime);
         System.out.println("All thread have been terminated");
+
+        DataVisualizer dataVisualizer = new DataVisualizer();
+
+        dataVisualizer.startDataVisualizer();
     }
 
-    public static void parallel(){
+    public static void parallel() {
         //Delete previous activity record
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
@@ -84,7 +90,7 @@ public class Main {
 //        timer.setDisasterTime(15);
         TimerThread timerThread = new TimerThread(timer);
         timerThread.start();
-        String startTime=Timer.getCurrentTime();
+        String startTime = Timer.getCurrentTime();
 
         //Start farmer thread
         for (Farmer farmer : farmers) {
@@ -97,9 +103,9 @@ public class Main {
         timer.setEnd(true);
 
         //Record End Time
-        String endTime=Timer.getCurrentTime();
-        System.out.println("Start Time: "+startTime);
-        System.out.println("End Time: "+endTime);
+        String endTime = Timer.getCurrentTime();
+        System.out.println("Start Time: " + startTime);
+        System.out.println("End Time: " + endTime);
         System.out.println("All thread have been terminated");
     }
 }
