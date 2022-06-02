@@ -41,9 +41,7 @@ public class Main {
         Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
         //Setup timer and timer thread
-        Timer timer = new Timer();
-//        timer.setDisasterTime(15);
-        TimerThread timerThread = new TimerThread(timer);
+        TimerThread timerThread = new TimerThread();
         timerThread.start();
         String startTime = Timer.getCurrentTime();
 
@@ -52,13 +50,19 @@ public class Main {
             Thread farmerThread = new Thread(farmer);
             farmerThread.run();
         }
-        timer.setEnd(true);
+        Timer.setEnd(true);
 
         //Record End Time
         String endTime = Timer.getCurrentTime();
         System.out.println("Start Time: " + startTime);
         System.out.println("End Time: " + endTime);
         System.out.println("All thread have been terminated");
+
+        try{
+            timerThread.join();
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
 
         //Idk should i declare at timerThread there or....
         DataVisualizer dataVisualizer = new DataVisualizer();
@@ -87,9 +91,7 @@ public class Main {
         Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
         //Setup timer and timer thread
-        Timer timer = new Timer();
-//        timer.setDisasterTime(15);
-        TimerThread timerThread = new TimerThread(timer);
+        TimerThread timerThread = new TimerThread();
         timerThread.start();
         String startTime = Timer.getCurrentTime();
 
@@ -101,13 +103,19 @@ public class Main {
         while (!farmerThreadPool.isTerminated()) {
             //wait all farmer finish job
         }
-        timer.setEnd(true);
+        Timer.setEnd(true);
 
         //Record End Time
         String endTime = Timer.getCurrentTime();
         System.out.println("Start Time: " + startTime);
         System.out.println("End Time: " + endTime);
         System.out.println("All thread have been terminated");
+
+        try{
+            timerThread.join();
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
 
         DataVisualizer dataVisualizer = new DataVisualizer();
 

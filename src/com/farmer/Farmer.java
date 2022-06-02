@@ -147,7 +147,7 @@ public class Farmer implements Runnable {
             }
         }
 
-        Activity activity = new Activity(farm.get_id(), this._id, Timer.getCurrentTime(), action, type, unit, quantity, field, row);
+        Activity activity = new Activity(farm.get_id(), this._id, Timer.getFakeTime(), action, type, unit, quantity, field, row);
         Future<Boolean> success=DataHandling.addElementIntoQueue(activity);
 
         while(true){

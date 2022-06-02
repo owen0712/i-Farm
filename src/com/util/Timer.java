@@ -12,7 +12,7 @@ public class Timer {
     private static volatile int fakeTimeInSecond = 0;
     private static final String FAKE_START_TIME = "2022.05.01.00.00.00"; // Set a start fake time
 
-    private int disasterTime; //Random generated in second, using setter method to set
+    private static int disasterTime; //Random generated in second, using setter method to set
     private static boolean isEnd;
 
     public static String getCurrentTime() {
@@ -30,7 +30,7 @@ public class Timer {
         }
     }
 
-    public void updateTime(){
+    public static void updateTime(){
         try{
             Thread.sleep(1000);
             fakeTimeInSecond ++;
@@ -43,7 +43,7 @@ public class Timer {
         return isEnd;
     }
 
-    public void setEnd(boolean end) {
+    public static void setEnd(boolean end) {
         isEnd = end;
     }
 
@@ -52,11 +52,11 @@ public class Timer {
     * If all threads die already, it will start all the threads one more time
     * The timer will restart again, using Timer timer = new Timer()
     * Start time and Disaster time will be reset again, farm may face the disaster again*/
-    public boolean isDisasterTime(){
+    public static boolean isDisasterTime(){
         return fakeTimeInSecond >= disasterTime;
     }
 
-    public void setDisasterTime(int disasterTime) {
-        this.disasterTime = disasterTime;
+    public static void setDisasterTime(int time) {
+        disasterTime = time;
     }
 }
