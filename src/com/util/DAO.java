@@ -289,7 +289,7 @@ public class DAO {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM activities where farmId=?");
+            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? ORDER BY date ASC");
             statement.setString(1, farmId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -316,7 +316,7 @@ public class DAO {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM activities where userId=?");
+            statement = connection.prepareStatement("SELECT * FROM activities where userId=? ORDER BY date ASC");
             statement.setString(1, userId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -343,7 +343,7 @@ public class DAO {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=?");
+            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=? ORDER BY date ASC");
             statement.setString(1, farmId);
             statement.setString(2, displayType);
             ResultSet result = statement.executeQuery();
@@ -372,7 +372,7 @@ public class DAO {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=? and date BETWEEN ? and ?");
+            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=? and date BETWEEN ? and ? ORDER BY date ASC");
             statement.setString(1, farmId);
             statement.setString(2, displayType);
             statement.setString(3, date1);
@@ -402,7 +402,7 @@ public class DAO {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
         try {
-            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=? and field=? and farm_row=? and date BETWEEN ? and ?");
+            statement = connection.prepareStatement("SELECT * FROM activities where farmId=? and type=? and field=? and farm_row=? and date BETWEEN ? and ? ORDER BY date ASC");
             statement.setString(1, farmId);
             statement.setString(2, displayType);
             statement.setInt(3, field);
