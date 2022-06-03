@@ -95,10 +95,10 @@ public class DataVisualizer {
                     System.out.println();
                     break;
                 case 6:
-                    System.out.println("\nThank you so much!!!");
+                    System.out.println("Thank you so much!!!");
                     System.exit(-1);
                 default:
-                    System.out.println("\nPlease insert a number in the range 1 - 5");
+                    System.out.println("\nPlease insert a number in the range 1 - 6");
                     break;
             }
         }
@@ -114,7 +114,7 @@ public class DataVisualizer {
         String farmId = sc.nextLine();
         System.out.println();
 
-        while (!checkFarmId(farmId)) {
+        while (!checkFarmId(farmId.replace(" ", ""))) {
             System.out.println("Sorry, please enter correct farm id");
             System.out.print("Please try again: ");
             farmId = sc.nextLine();
@@ -123,15 +123,7 @@ public class DataVisualizer {
         List<Activity> farmActivityList = dao.getActivityByFarmId(farmId);
 
         System.out.println("Activity log for farm " + farmId);
-
-//        System.out.printf("%10s %15s %5s %5s %5s %5s %10s", "Activity type", "Type", "Field", "Row", "Quantity", "Unit", "Date");
-        for (Activity activity : farmActivityList) {
-//            System.out.printf("%10s %15s %2d %2d %.2f %2s %10s",activity.getAction(), activity.getType(), activity.getField(), activity.getRow(),
-//                    unitConverter.getConvertValueUnitString(activity.getQuantity(), activity.getUnit()), activity.getUnit(), activity.getDate());
-            System.out.println(activity.getAction() + " " + activity.getType() + " Field " +
-                    activity.getField() + " Row " + activity.getRow() + " " + unitConverter.getConvertValueUnitString(activity.getQuantity(), activity.getUnit()) +
-                    " " + activity.getDate());
-        }
+        printResult(farmActivityList);
     }
 
     private void model2() {
@@ -156,11 +148,7 @@ public class DataVisualizer {
         List<Activity> farmerActivity = dao.getActivityByFarmerId(String.valueOf(farmerId));
 
         System.out.println("Activity log for farmer " + farmerId);
-        for (Activity activity : farmerActivity) {
-            System.out.println(activity.getAction() + " " + activity.getType() + " Field " +
-                    activity.getField() + " Row " + activity.getRow() + " " + unitConverter.getConvertValueUnitString(activity.getQuantity(), activity.getUnit()) +
-                    " " + activity.getDate());
-        }
+        printResult(farmerActivity);
     }
 
     private void model3() {
@@ -187,16 +175,12 @@ public class DataVisualizer {
 
         List<Activity> farmAndTypeList = dao.getActivityByFarmerIdAndType(farmId, displayType);
 
-        if(farmAndTypeList.isEmpty()){
+        if (farmAndTypeList.isEmpty()) {
             System.out.println("Sorry, not have such record.");
         }
 
         System.out.println("Activity log for farmer " + farmId);
-        for (Activity activity : farmAndTypeList) {
-            System.out.println(activity.getAction() + " " + activity.getType() + " Field " +
-                    activity.getField() + " Row " + activity.getRow() + " " + unitConverter.getConvertValueUnitString(activity.getQuantity(), activity.getUnit()) +
-                    " " + activity.getDate());
-        }
+        printResult(farmAndTypeList);
     }
 
     private void model4() {
@@ -231,16 +215,12 @@ public class DataVisualizer {
 
         List<Activity> farmAndTypeBetweenDateList = dao.getActivityByFarmerIdAndTypeBetweenDate(farmId, displayType, dateStart, dateEnd);
 
-        if(farmAndTypeBetweenDateList.isEmpty()){
+        if (farmAndTypeBetweenDateList.isEmpty()) {
             System.out.println("Sorry, not have such record.");
         }
 
         System.out.println("Activity log for farmer " + farmId);
-        for (Activity activity : farmAndTypeBetweenDateList) {
-            System.out.println(activity.getAction() + " " + activity.getType() + " Field" +
-                    activity.getField() + " Row" + activity.getRow() + " " + unitConverter.getConvertValueUnitString(activity.getQuantity(), activity.getUnit()
-                    + " " + activity.getDate()));
-        }
+        printResult(farmAndTypeBetweenDateList);
     }
 
     private void model5() {
@@ -287,7 +267,7 @@ public class DataVisualizer {
         List<Activity> farmAndTypeBetweenDateListWithFieldRowList = dao.getActivityByFarmerIdAndTypeBetweenDateWithFieldRow(farmId,
                 displayType, dateStart, dateEnd, fieldSelected, rowSelected);
 
-        if(farmAndTypeBetweenDateListWithFieldRowList.isEmpty()){
+        if (farmAndTypeBetweenDateListWithFieldRowList.isEmpty()) {
             System.out.println("Sorry, not have such record.");
         }
 
@@ -390,6 +370,15 @@ public class DataVisualizer {
                 System.out.println(Character.toUpperCase(key1.charAt(0)) + key1.substring(1) + " " + innerKey + "Field " + field +
                         " Row " + row + " " + innertValue + " " + mainUnit);
             }
+        }
+    }
+
+    private void printResult(List<Activity> farmActivityList){
+        System.out.printf("%-10s %-50s %-8s %-5s %-22s %-10s\n", "Activity", "Type", "Field", "Row", "Quantity&Unit", "Date");
+        for (Activity activity : farmActivityList) {
+            System.out.printf("%-10s %-50s Field %2d Row %2d %6.2f%-15s %-10s\n",
+                    activity.getAction(), activity.getType(), activity.getField(), activity.getRow(),
+                    activity.getQuantity(), activity.getUnit(), activity.getDate());
         }
     }
 }
