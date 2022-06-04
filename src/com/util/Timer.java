@@ -12,7 +12,7 @@ public class Timer {
     private static volatile int fakeTimeInSecond = 0;
     private static final String FAKE_START_TIME = "2022.05.01.00.00.00"; // Set a start fake time
 
-    private static int disasterTime; //Random generated in second, using setter method to set
+    private static int disasterTime = -100;
     private static boolean isEnd;
 
     public static String getCurrentTime() {
@@ -53,10 +53,14 @@ public class Timer {
     * The timer will restart again, using Timer timer = new Timer()
     * Start time and Disaster time will be reset again, farm may face the disaster again*/
     public static boolean isDisasterTime(){
-        return fakeTimeInSecond >= disasterTime;
+        return fakeTimeInSecond >= disasterTime && fakeTimeInSecond <= disasterTime + 2;
     }
 
     public static void setDisasterTime(int time) {
         disasterTime = time;
+    }
+
+    public static int getDisasterTime() {
+        return disasterTime;
     }
 }
