@@ -466,11 +466,11 @@ public class DataVisualizer {
     }
 
     private void printResult(List<Activity> farmActivityList) {
-        System.out.printf("%-10s %-50s %-9s %-8s %-17s %-10s\n", "Activity", "Type", "Field", "Row", "Quantity&Unit", "Date");
+        System.out.printf("%-10s %-75s %-9s %-8s%-16s %-10s\n", "Activity", "Type", "Field", "Row", "Quantity&Unit", "Date");
         for (Activity activity : farmActivityList) {
-            System.out.printf("%-10s %-50s Field %2d  Row %2d %6.2f%-10s %-10s\n",
+            System.out.printf("%-10s %-75s Field %2d  Row %2d  %-6.2f%-10s %-10s\n",
                     activity.getAction(), activity.getType(), activity.getField(), activity.getRow(),
-                    activity.getQuantity(), activity.getUnit(), activity.getDate());
+                    unitConverter.getConvertValue(activity.getQuantity(), activity.getUnit()),"kg", activity.getDate());
         }
     }
 }
