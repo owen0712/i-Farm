@@ -9,37 +9,34 @@ import com.plant.Plant;
 import com.util.DAO;
 import com.util.UnitConverter;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class DataVisualizer {
 
     private int indexFarmId = 0;
     private Map<String, Map<String, Double>> activityTypeMap;
-    DAO dao = new DAO();
-    String[] farmsIdArr;
-    String[] farmerIdArr;
-    Integer[] farmFieldArr;
-    Integer[] farmRowArr;
-    Farmer[] farmers = dao.getFarmerData();
-    Map<String, Integer> farmIdMap;
-
+    private String[] farmsIdArr;
+    private String[] farmerIdArr;
+    private Map<String, Integer> farmIdMap;
+    private Map<String, String> chosenMap = new HashMap<>();
     private UnitConverter unitConverter;
+    private List<String> chosenIdList = new ArrayList<>();
+
+    DAO dao = new DAO();
+    Farmer[] farmers = dao.getFarmerData();
 
     public DataVisualizer() {
         this.activityTypeMap = new HashMap<>();
         dao = new DAO();
         farmsIdArr = new String[Main.farms.length];
         this.farmerIdArr = new String[farmers.length];
-        this.farmFieldArr = new Integer[Main.farms.length];
-        this.farmRowArr = new Integer[Main.farms.length];
         this.farmIdMap = new HashMap<>();
 
         this.unitConverter = new UnitConverter();
 
         for (int i = 0; i < Main.farms.length; i++) {
             farmsIdArr[i] = Main.farms[i].get_id();
-            farmFieldArr[i] = Main.farms[i].getField();
-            farmRowArr[i] = Main.farms[i].getRow();
             farmIdMap.put(Main.farms[i].get_id(), i);
         }
         for (int i = 0; i < farmers.length; i++) {
@@ -62,7 +59,7 @@ public class DataVisualizer {
         System.out.print("\nPlease choose a mode: ");
         int mode = sc.nextInt();
         System.out.println();
-        while (1 <= mode && mode <= 6) {
+        while (true) {
             switch (mode) {
                 case 1:
                     model1();
@@ -102,7 +99,6 @@ public class DataVisualizer {
                     break;
             }
         }
-
     }
 
     private void model1() {
@@ -120,6 +116,7 @@ public class DataVisualizer {
             farmId = sc.nextLine();
             System.out.println();
         }
+
         List<Activity> farmActivityList = dao.getActivityByFarmId(farmId);
 
         System.out.println("Activity log for farm " + farmId);
@@ -167,13 +164,34 @@ public class DataVisualizer {
             System.out.println();
         }
 
-        printPlantFertilisePesticides(farmId);
-
-        System.out.print("\n\nChoose one type to display(plant/fertilizer/pesticide) by entering their name: ");
+        System.out.print("Choose one type to display(plant/fertilizer/pesticide): ");
         String displayType = sc.nextLine();
         System.out.println();
 
-        List<Activity> farmAndTypeList = dao.getActivityByFarmerIdAndType(farmId, displayType);
+        while (!(displayType.equalsIgnoreCase("plant") || displayType.equalsIgnoreCase("fertilizer")
+                || displayType.equalsIgnoreCase("pesticide"))) {
+            System.out.println("Sorry, please enter correct display type (plant/fertilizer/pesticide)");
+            System.out.print("Please enter again: ");
+            displayType = sc.nextLine();
+            System.out.println();
+        }
+
+        printPlantFertilisePesticides(displayType, farmId);
+
+        System.out.print("\nPlease input an id of the type chosen(plant/fertilizer/pesticide): ");
+        String chosenId = sc.nextLine();
+        System.out.println();
+
+        while (!checkChosenId(chosenId)) {
+            System.out.println("Sorry, please input correct Id of related display type");
+            System.out.print("Please enter again: ");
+            chosenId = sc.nextLine();
+            System.out.println();
+        }
+
+        String chosenName = this.chosenMap.get(chosenId);
+
+        List<Activity> farmAndTypeList = dao.getActivityByFarmerIdAndType(farmId, chosenName);
 
         if (farmAndTypeList.isEmpty()) {
             System.out.println("Sorry, not have such record.");
@@ -199,11 +217,32 @@ public class DataVisualizer {
             System.out.println();
         }
 
-        printPlantFertilisePesticides(farmId);
-
-        System.out.print("\n\nChoose one type to display(plant/fertilizer/pesticide) by entering their name: ");
+        System.out.print("Choose one type to display(plant/fertilizer/pesticide): ");
         String displayType = sc.nextLine();
         System.out.println();
+
+        while (!(displayType.equalsIgnoreCase("plant") || displayType.equalsIgnoreCase("fertilizer")
+                || displayType.equalsIgnoreCase("pesticide"))) {
+            System.out.println("Sorry, please enter correct display type (plant/fertilizer/pesticide)");
+            System.out.print("Please enter again: ");
+            displayType = sc.nextLine();
+            System.out.println();
+        }
+
+        printPlantFertilisePesticides(displayType, farmId);
+
+        System.out.print("\nPlease input an id of the type chosen(plant/fertilizer/pesticide): ");
+        String chosenId = sc.nextLine();
+        System.out.println();
+
+        while (!checkChosenId(chosenId)) {
+            System.out.println("Sorry, please input correct Id of related display type");
+            System.out.print("Please enter again: ");
+            chosenId = sc.nextLine();
+            System.out.println();
+        }
+
+        String chosenName = this.chosenMap.get(chosenId);
 
         System.out.print("Please input start date (year.month.date.hour.min.ss)(exp: 2022.06.02.11.12.32): ");
         String dateStart = sc.nextLine();
@@ -213,7 +252,7 @@ public class DataVisualizer {
         String dateEnd = sc.nextLine();
         System.out.println();
 
-        List<Activity> farmAndTypeBetweenDateList = dao.getActivityByFarmerIdAndTypeBetweenDate(farmId, displayType, dateStart, dateEnd);
+        List<Activity> farmAndTypeBetweenDateList = dao.getActivityByFarmerIdAndTypeBetweenDate(farmId, chosenName, dateStart, dateEnd);
 
         if (farmAndTypeBetweenDateList.isEmpty()) {
             System.out.println("Sorry, not have such record.");
@@ -239,11 +278,32 @@ public class DataVisualizer {
             System.out.println();
         }
 
-        printPlantFertilisePesticides(farmId);
-
-        System.out.print("\n\nChoose one type to display(plant/fertilizer/pesticide) by entering their name: ");
+        System.out.print("Choose one type to display(plant/fertilizer/pesticide): ");
         String displayType = sc.nextLine();
         System.out.println();
+
+        while (!(displayType.equalsIgnoreCase("plant") || displayType.equalsIgnoreCase("fertilizer")
+                || displayType.equalsIgnoreCase("pesticide"))) {
+            System.out.println("Sorry, please enter correct display type (plant/fertilizer/pesticide)");
+            System.out.print("Please enter again: ");
+            displayType = sc.nextLine();
+            System.out.println();
+        }
+
+        printPlantFertilisePesticides(displayType, farmId);
+
+        System.out.print("\nPlease input an id of the type chosen(plant/fertilizer/pesticide): ");
+        String chosenId = sc.nextLine();
+        System.out.println();
+
+        while (!checkChosenId(chosenId)) {
+            System.out.println("Sorry, please input correct Id of related display type");
+            System.out.print("Please enter again: ");
+            chosenId = sc.nextLine();
+            System.out.println();
+        }
+
+        String chosenName = this.chosenMap.get(chosenId);
 
         printFieldAndRowOfFarm(farmId);
 
@@ -302,19 +362,13 @@ public class DataVisualizer {
         return farmsIdList.contains(farmId);
     }
 
+    private boolean checkChosenId(String chosenId) {
+        return this.chosenIdList.contains(chosenId);
+    }
+
     private boolean checkFarmerId(String farmerId) {
         List<String> farmerIdList = new ArrayList<>(Arrays.asList(this.farmerIdArr));
         return farmerIdList.contains(farmerId);
-    }
-
-    private boolean checkFarmField(int farmField) {
-        List<Integer> farmFieldList = new ArrayList<>(Arrays.asList(this.farmFieldArr));
-        return farmFieldList.contains(farmField);
-    }
-
-    private boolean checkFarmRow(int farmRow) {
-        List<Integer> farmRowList = new ArrayList<>(Arrays.asList(this.farmRowArr));
-        return farmRowList.contains(farmRow);
     }
 
     private int retrieveFarmIdIndex(String farmId) {
@@ -327,26 +381,64 @@ public class DataVisualizer {
         System.out.println("Field: " + Main.farms[indexFarm].getField() + " Row: " + Main.farms[indexFarm].getRow());
     }
 
-    private void printPlantFertilisePesticides(String farmId) {
-        System.out.println("Below is the list of plant planted inside the farm" + farmId);
+    private void printPlantFertilisePesticides(String displayType, String farmId) {
+
+        switch (displayType.toLowerCase()) {
+            case "plant":
+                printPlantId(farmId);
+                break;
+            case "fertilizer":
+                printFertilizerId(farmId);
+                break;
+            case "pesticide":
+                printPesticide(farmId);
+                break;
+            default:
+                System.out.println("Error");
+        }
+    }
+
+    private void printPlantId(String farmId) {
+        System.out.println("Below is the list of plant id planted inside the farm " + farmId);
         this.indexFarmId = retrieveFarmIdIndex(farmId);
-
         Plant[] plants = Main.farms[indexFarmId].getPlants();
+        Arrays.sort(plants, Comparator.comparing(Plant::get_id));
+
         for (int i = 0; i < plants.length; i++) {
-            System.out.print(plants[i].getName() + ", ");
+            System.out.print(plants[i].get_id() + ", ");
+            this.chosenIdList.add(plants[i].get_id());
+            this.chosenMap.put(plants[i].get_id(), plants[i].getName());
         }
+        System.out.println();
+    }
 
-        System.out.println("\n\nBelow is the list of fertilizer used in the farm" + farmId);
+    private void printFertilizerId(String farmId) {
+        System.out.println("Below is the list of fertilizer id used in the farm " + farmId);
+        this.indexFarmId = retrieveFarmIdIndex(farmId);
         Fertilizer[] fertilizes = Main.farms[indexFarmId].getFertilizes();
-        for (int i = 0; i < fertilizes.length; i++) {
-            System.out.print(fertilizes[i].getName() + ", ");
-        }
+        Arrays.sort(fertilizes, Comparator.comparing(Fertilizer::get_id));
 
-        System.out.println("\n\nBelow is the list of pesticide used in the farm: " + farmId);
-        Pesticide[] pesticides = Main.farms[indexFarmId].getPesticides();
-        for (int i = 0; i < pesticides.length; i++) {
-            System.out.print(pesticides[i].getName() + ", ");
+        for (int i = 0; i < fertilizes.length; i++) {
+            System.out.print(fertilizes[i].get_id() + ", ");
+            this.chosenIdList.add(fertilizes[i].get_id());
+            this.chosenMap.put(fertilizes[i].get_id(), fertilizes[i].getName());
         }
+        System.out.println();
+    }
+
+    private void printPesticide(String farmId) {
+        System.out.println("Below is the list of pesticide id used in the farm " + farmId);
+        this.indexFarmId = retrieveFarmIdIndex(farmId);
+        System.out.println("asdasdasd: " + indexFarmId);
+        Pesticide[] pesticides = Main.farms[indexFarmId].getPesticides();
+        Arrays.sort(pesticides, Comparator.comparing(Pesticide::get_id));
+
+        for (int i = 0; i < pesticides.length; i++) {
+            System.out.print(pesticides[i].get_id() + ", ");
+            this.chosenIdList.add(pesticides[i].get_id());
+            this.chosenMap.put(pesticides[i].get_id(), pesticides[i].getName());
+        }
+        System.out.println();
     }
 
     private void printSummaryMapMode5(Map<String, Map<String, Double>> summaryMap, int field, int row) {
@@ -373,10 +465,10 @@ public class DataVisualizer {
         }
     }
 
-    private void printResult(List<Activity> farmActivityList){
-        System.out.printf("%-10s %-50s %-8s %-5s %-22s %-10s\n", "Activity", "Type", "Field", "Row", "Quantity&Unit", "Date");
+    private void printResult(List<Activity> farmActivityList) {
+        System.out.printf("%-10s %-50s %-9s %-8s %-17s %-10s\n", "Activity", "Type", "Field", "Row", "Quantity&Unit", "Date");
         for (Activity activity : farmActivityList) {
-            System.out.printf("%-10s %-50s Field %2d Row %2d %6.2f%-15s %-10s\n",
+            System.out.printf("%-10s %-50s Field %2d  Row %2d %6.2f%-10s %-10s\n",
                     activity.getAction(), activity.getType(), activity.getField(), activity.getRow(),
                     activity.getQuantity(), activity.getUnit(), activity.getDate());
         }
