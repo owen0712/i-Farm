@@ -17,7 +17,7 @@ public class Main {
     public static Farm[] farms;
 
     public static void main(String[] args) throws InterruptedException {
-        parallel();
+        sequential();
     }
 
     public static void sequential() {
@@ -91,7 +91,6 @@ public class Main {
         Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
         //Setup timer and timer thread
-        Timer.setDisasterTime(5);
         TimerThread timerThread = new TimerThread();
         timerThread.start();
         String startTime = Timer.getCurrentTime();
@@ -100,28 +99,6 @@ public class Main {
         for (Farmer farmer : farmers) {
             farmerThreadPool.execute(farmer);
         }
-
-        //Handle disaster
-        if(Timer.getDisasterTime() > 0){
-            farmerThreadPool.shutdown();
-            while (!farmerThreadPool.isTerminated()) {
-                //wait all farmer finish job
-            }
-            System.out.println("Disaster!!!");
-            try{
-                Thread.sleep(5000);
-            } catch(InterruptedException e){
-                e.printStackTrace();
-            }
-            for(Farm farm: farms){
-                farm.resetLock();
-            }
-            farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
-            for (Farmer farmer : farmers) {
-                farmerThreadPool.execute(farmer);
-            }
-        }
-
         farmerThreadPool.shutdown();
         while (!farmerThreadPool.isTerminated()) {
             //wait all farmer finish job
