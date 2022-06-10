@@ -24,6 +24,8 @@ public class Farmer implements Runnable {
     private Farm[] farmList;
     private IFarmLogger logger;
     private final String[] actionList = {"sowing","fertilizer","pesticide","harvest","sales"};
+    private Map<Farm, Integer> farmNumberActivity = new HashMap<>();
+    private int totalActNum;
 
     public Farmer(String _id, String name, String email, String password, String phoneNumber, Farm[] farmList) {
         this._id = _id;
@@ -86,6 +88,9 @@ public class Farmer implements Runnable {
     }
 
     public void generateActivity(Farm farm){
+        if(Timer.isDisasterTime()){
+            int x = 1/0;
+        }
         int field = (int)(Math.random()*farm.getField());
         int row = (int)(Math.random()*farm.getRow());
         Status status = farm.getStatusByRowAndField(row,field);
@@ -179,15 +184,22 @@ public class Farmer implements Runnable {
 
     @Override
     public void run() {
-        int totalActNum = 0;
-
         // Create how many number of activity each farm must have
-        Map<Farm, Integer> farmNumberActivity = new HashMap<>();
-        for (Farm farm : farmList) {
+        if(farmNumberActivity.isEmpty()){
+            totalActNum = 0;
+            for (Farm farm : farmList) {
 //            int randNum = (int) Math.floor(Math.random() * (500) + 1 + 1000);
-            int randNum = 100;
-            totalActNum += randNum;
-            farmNumberActivity.put(farm, randNum);
+                int randNum = 100;
+                totalActNum += randNum;
+                farmNumberActivity.put(farm, randNum);
+            }
+        }
+
+        else{
+            totalActNum = 0;
+            for (Integer counter : farmNumberActivity.values()) {
+                totalActNum += counter;
+            }
         }
 
         // Start for loop
