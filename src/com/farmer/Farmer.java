@@ -1,18 +1,13 @@
 package com.farmer;
 
 import com.activity.Activity;
-import com.dataHandling.DataHandling;
 import com.dataHandling.SequentialDataHandling;
 import com.farm.Farm;
 import com.farm.Status;
-import com.main.Main;
 import com.plant.Plant;
-import com.util.DAO;
 import com.util.IFarmLogger;
 import com.util.Timer;
-import com.util.UnitConverter;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -31,6 +26,7 @@ public class Farmer implements Runnable {
     private Map<Farm, Integer> farmNumberActivity = new HashMap<>();
     private int totalActNum;
 
+    //constructor
     public Farmer(String _id, String name, String email, String password, String phoneNumber, Farm[] farmList) {
         this._id = _id;
         this.name = name;
@@ -43,6 +39,7 @@ public class Farmer implements Runnable {
     public Farmer() {
     }
 
+    //all the setter and getter
     public String get_id() {
         return _id;
     }
@@ -92,15 +89,20 @@ public class Farmer implements Runnable {
         this.farmList = farmList;
     }
 
+    //Generate Activity Method in concurrent approach
     public void generateActivity(Farm farm){
+        //When there is disaster happened, the system will throw this exception display disaster message on current Farmer thread
         if(Timer.isDisasterTime()){
             throw new RuntimeException("Disaster happened at "+Thread.currentThread().getName());
         }
+
+        //Randomly get field and row of the farm
         int field = (int)(Math.random()*farm.getField());
         int row = (int)(Math.random()*farm.getRow());
         Status status = farm.getStatusByRowAndField(row,field);
         String action;
 
+        //lock the row and field
         status.getLock().lock();
         //check the row and field current action and decide the next action
         if(status.getAction()==null){
@@ -111,6 +113,7 @@ public class Farmer implements Runnable {
             action = this.actionList[(int)(Math.random()*(this.actionList.length-2)+1)];
         }
 
+        //get plant/fertilizer/pesticide based on the action
         String type;
         String unitType;
         Plant plant = null;
@@ -123,6 +126,7 @@ public class Farmer implements Runnable {
                 status.setPlant(plant);
             }
             case "harvest", "sales" -> {
+                //get the previous plant in the row and field
                 plant = status.getPlant();
                 type = plant.getName();
                 unitType = plant.getUnitType();
@@ -167,6 +171,7 @@ public class Farmer implements Runnable {
             }
         }
 
+        //Submit activity into data handling through farm and get the future
         Activity activity = new Activity(farm.get_id(), this._id, Timer.getFakeTime(), action, type, unit, quantity, field, row);
         Future<Boolean> success=farm.submitActivity(activity);
 
@@ -187,11 +192,12 @@ public class Farmer implements Runnable {
         }else{
             status.setAction(action);
         }
-        //log in to logfile
-        //format: (Sowing Plant Field 1 Row 1 1.5 UnitType at FarmName 2022-05-18)
+
+        //Create log file for the farmer if it is not existed
         if(logger==null) {
             logger = new IFarmLogger(this);
         }
+        //unlock the row and field
         status.getLock().unlock();
     }
 
@@ -221,10 +227,11 @@ public class Farmer implements Runnable {
             // Farmer randomly pick one farm
             int currentFarm = (int) Math.floor(Math.random() * (farmNumberActivity.size()));
 
-
-            //When the number of activity is cleared
             Farm farm = (Farm) farmNumberActivity.keySet().toArray()[currentFarm];
             generateActivity(farm);
+
+            //When the number of activity is cleared, the farm will be removed
+            //else the activityNumber will decrease by 1
             if(farmNumberActivity.get(farm) == 1){
                 farmNumberActivity.remove(farm);
             }
@@ -234,7 +241,10 @@ public class Farmer implements Runnable {
         }
     }
 
+    //SEQUENTIAL APPROACH
+    //Generate Activity Method in sequential approach
     public void generateSequentialActivity(Farm farm){
+        //Randomly get field and row of the farm
         int field = (int)(Math.random()*farm.getField());
         int row = (int)(Math.random()*farm.getRow());
         Status status = farm.getStatusByRowAndField(row,field);
@@ -249,6 +259,7 @@ public class Farmer implements Runnable {
             action = this.actionList[(int)(Math.random()*(this.actionList.length-2)+1)];
         }
 
+        //get plant/fertilizer/pesticide based on the action
         String type;
         String unitType;
         Plant plant = null;
@@ -307,6 +318,7 @@ public class Farmer implements Runnable {
 
         Activity activity = new Activity(farm.get_id(), this._id, Timer.getFakeTime(), action, type, unit, quantity, field, row);
 
+        //Submit activity into data handling which in sequential approach
         SequentialDataHandling dataHandling = new SequentialDataHandling();
         dataHandling.submitAvtivity(activity);
 
@@ -318,13 +330,14 @@ public class Farmer implements Runnable {
         }else{
             status.setAction(action);
         }
-        //log in to logfile
-        //format: (Sowing Plant Field 1 Row 1 1.5 UnitType at FarmName 2022-05-18)
+
+        //Create log file for the farmer if it is not existed
         if(logger==null) {
             logger = new IFarmLogger(this);
         }
     }
 
+    // Run the class to generate all the farmer activities in sequential approach
     public void runSequentialTask() {
         // Create how many number of activity each farm must have
         totalActNum = 0;
@@ -341,10 +354,11 @@ public class Farmer implements Runnable {
             // Farmer randomly pick one farm
             int currentFarm = (int) Math.floor(Math.random() * (farmNumberActivity.size()));
 
-
-            //When the number of activity is cleared
             Farm farm = (Farm) farmNumberActivity.keySet().toArray()[currentFarm];
             generateSequentialActivity(farm);
+
+            //When the number of activity is cleared, the farm will be removed
+            //else the activityNumber will decrease by 1
             if(farmNumberActivity.get(farm) == 1){
                 farmNumberActivity.remove(farm);
             }
