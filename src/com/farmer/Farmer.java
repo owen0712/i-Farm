@@ -45,6 +45,7 @@ public class Farmer implements Runnable {
 
     public void set_id(String _id) {
         this._id = _id;
+        Thread.currentThread().setName(_id);
     }
 
     public String getName() {
@@ -89,7 +90,7 @@ public class Farmer implements Runnable {
 
     public void generateActivity(Farm farm){
         if(Timer.isDisasterTime()){
-            int x = 1/0;
+            throw new RuntimeException("Disaster happened at "+Thread.currentThread().getName());
         }
         int field = (int)(Math.random()*farm.getField());
         int row = (int)(Math.random()*farm.getRow());
@@ -153,7 +154,7 @@ public class Farmer implements Runnable {
         }
 
         Activity activity = new Activity(farm.get_id(), this._id, Timer.getFakeTime(), action, type, unit, quantity, field, row);
-        Future<Boolean> success=DataHandling.addElementIntoQueue(activity);
+        Future<Boolean> success=farm.submitActivity(activity);
 
         while(true){
             try {
@@ -176,9 +177,6 @@ public class Farmer implements Runnable {
         if(logger==null) {
             logger = new IFarmLogger(this);
         }
-//        logger.logFarmerActivities(activity.getDate()+": "+activity.getAction()+" "+activity.getType()+" Field "+activity.getField()+" Row "+activity.getRow()+" "+activity.getQuantity()+" "+activity.getUnit()+" at "+farm.get_id()+" "+Timer.getFakeTime());
-        String logText = String.format("%s: %-5s -> %-10s %-50s Field %2d Row %2d %6.2f%-5s at %-5s %-20s", activity.getDate(), activity.get_id(), activity.getAction(), activity.getType(), activity.getField(), activity.getRow(), activity.getQuantity(), activity.getUnit(), activity.getFarmId(), activity.getDate());
-        logger.logFarmerActivities(logText);
         status.getLock().unlock();
     }
 

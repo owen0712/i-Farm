@@ -7,16 +7,16 @@ import java.util.Date;
 
 public class Timer {
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
 
     private static volatile int fakeTimeInSecond = 0;
-    private static final String FAKE_START_TIME = "2022.05.01.00.00.00"; // Set a start fake time
+    private static final String FAKE_START_TIME = "2022.05.01"; // Set a start fake time
 
     private static int disasterTime = -100;
     private static boolean isEnd;
 
     public static String getCurrentTime() {
-        return sdf.format(new Date());
+        return sdf.format(System.currentTimeMillis());
     }
 
     public static synchronized String getFakeTime(){

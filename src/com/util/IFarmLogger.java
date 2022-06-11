@@ -26,8 +26,8 @@ public class IFarmLogger {
         }
     }
 
-    public IFarmLogger(String farmId, String activityId) {
-        logger = Logger.getLogger(Farm.class.getName() + farmId + activityId);
+    public IFarmLogger(String farmId) {
+        logger = Logger.getLogger(Farm.class.getName() + farmId);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
         try {
             fileHandler = new FileHandler("log/farm/" + farmId + ".txt", true);

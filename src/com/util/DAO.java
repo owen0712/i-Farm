@@ -236,12 +236,7 @@ public class DAO {
         return farmList.toArray(new Farm[farmList.size()]);
     }
 
-    public static synchronized boolean insertActivityData(Activity activity) {
-        try {
-            connection.setAutoCommit(false);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public static boolean insertActivityData(Activity activity) {
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement("INSERT INTO activities(_id,farmId,userId,date,action,type,unit,quantity,field,farm_row) VALUES(?,?,?,?,?,?,?,?,?,?)");

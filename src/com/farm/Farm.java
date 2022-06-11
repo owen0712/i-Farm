@@ -1,8 +1,14 @@
 package com.farm;
 
+import com.activity.Activity;
+import com.dataHandling.DataHandling;
 import com.fertilizer.Fertilizer;
 import com.pesticide.Pesticide;
 import com.plant.Plant;
+import com.util.IFarmLogger;
+
+import java.util.concurrent.Future;
+import java.util.concurrent.locks.ReentrantLock;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,12 +23,15 @@ public class Farm {
     private int row;
     private int field;
     private Status[][] status;
+    private IFarmLogger logger;
+    private DataHandling dataHandler;
 
     public Farm() {
         this.row = (int) (Math.random() * 6 + 1);   // total number of row 1 - 5
         this.field = (int) (Math.random() * 6 + 1); // total number of field 1 - 5
         status = new Status[this.row][this.field];
         initializeStatus();
+        dataHandler = new DataHandling();
     }
 
     // Maybe will not use this constructor, basically the data will directly get from DAO
@@ -36,10 +45,11 @@ public class Farm {
         this.row = row;
         this.field = field;
         this.status = status;
-        this.row = (int) (Math.random() * 5 + 5);   // total number of row 10 - 20
-        this.field = (int) (Math.random() * 5 + 5); // total number of field 10 - 20
+        this.row = (int) (Math.random() * 5 + 1);   // total number of row 10 - 20
+        this.field = (int) (Math.random() * 5 + 1); // total number of field 10 - 20
         status = new Status[this.row][this.field];
         initializeStatus();
+        dataHandler = new DataHandling();
     }
 
     public String get_id() {
@@ -128,5 +138,16 @@ public class Farm {
                 status[row][column].setLock(new ReentrantLock());
             }
         }
+    }
+
+    public void logActivityRecord(String log) {
+        if (logger == null) {
+            logger = new IFarmLogger(_id);
+        }
+        logger.logFarmActivities(log);
+    }
+
+    public Future<Boolean> submitActivity(Activity activity) {
+        return dataHandler.addElementIntoQueue(activity);
     }
 }

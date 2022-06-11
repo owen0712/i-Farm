@@ -5,7 +5,6 @@ import com.dataVisualization.DataVisualizer;
 import com.farm.Farm;
 import com.farmer.Farmer;
 import com.util.DAO;
-import com.util.IFarmLogger;
 import com.util.Timer;
 import com.util.TimerThread;
 
@@ -17,7 +16,16 @@ public class Main {
     public static Farm[] farms;
 
     public static void main(String[] args) throws InterruptedException {
-        parallel();
+
+//        DAO dao = new DAO();
+//
+//        //Getting farms from db
+//        farms = dao.getFarmData();
+//
+//        DataVisualizer dataVisualizer = new DataVisualizer();
+//
+//        dataVisualizer.startDataVisualizer();
+        concurrent();
     }
 
     public static void sequential() {
@@ -48,14 +56,16 @@ public class Main {
         //Start farmer thread
         for (Farmer farmer : farmers) {
             Thread farmerThread = new Thread(farmer);
-            farmerThread.run();
+            farmerThread.start();
+            while(farmerThread.isAlive()){
+            }
         }
-        Timer.setEnd(true);
 
         //Record End Time
         String endTime = Timer.getCurrentTime();
         System.out.println("Start Time: " + startTime);
         System.out.println("End Time: " + endTime);
+//        System.out.println("Time used: "+ (endTime-startTime));
         System.out.println("All thread have been terminated");
 
         try{
@@ -64,23 +74,22 @@ public class Main {
             e.printStackTrace();
         }
 
+        Timer.setEnd(true);
+
         //Idk should i declare at timerThread there or....
         DataVisualizer dataVisualizer = new DataVisualizer();
 
         dataVisualizer.startDataVisualizer();
+
     }
 
-    public static void parallel() {
+    public static void concurrent() {
         //Delete previous activity record
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
 
         //Getting farms from db
 //        farms = dao.getFarmData();
-
-        //Start data handling thread
-        Thread dataHandlingThread = new Thread(new DataHandling());
-        dataHandlingThread.start();
 
         //Generate Farmer
         Random random = new Random();
@@ -109,7 +118,7 @@ public class Main {
             }
             System.out.println("Disaster!!!");
             try{
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             } catch(InterruptedException e){
                 e.printStackTrace();
             }
@@ -126,19 +135,15 @@ public class Main {
         while (!farmerThreadPool.isTerminated()) {
             //wait all farmer finish job
         }
+
         Timer.setEnd(true);
 
         //Record End Time
         String endTime = Timer.getCurrentTime();
         System.out.println("Start Time: " + startTime);
         System.out.println("End Time: " + endTime);
+//        System.out.println("Time used: "+ (endTime-startTime));
         System.out.println("All thread have been terminated");
-
-        try{
-            timerThread.join();
-        } catch(InterruptedException e){
-            e.printStackTrace();
-        }
 
         DataVisualizer dataVisualizer = new DataVisualizer();
 
