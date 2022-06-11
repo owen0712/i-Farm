@@ -8,9 +8,6 @@ import com.plant.Plant;
 import com.util.IFarmLogger;
 
 import java.util.concurrent.Future;
-import java.util.concurrent.locks.ReentrantLock;
-
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Farm {
 
@@ -26,6 +23,10 @@ public class Farm {
     private IFarmLogger logger;
     private DataHandling dataHandler;
 
+    /* Initialize random number row and field for each farm
+       Initialize a double array for the status of each row and field
+       Initialize a new data handling
+     */
     public Farm() {
         this.row = (int) (Math.random() * 6 + 1);   // total number of row 1 - 5
         this.field = (int) (Math.random() * 6 + 1); // total number of field 1 - 5
@@ -34,7 +35,6 @@ public class Farm {
         dataHandler = new DataHandling();
     }
 
-    // Maybe will not use this constructor, basically the data will directly get from DAO
     public Farm(String _id, String name, String address, Pesticide[] pesticides, Fertilizer[] fertilizes, Plant[] plants, int row, int field, Status[][] status) {
         this._id = _id;
         this.name = name;
@@ -45,8 +45,8 @@ public class Farm {
         this.row = row;
         this.field = field;
         this.status = status;
-        this.row = (int) (Math.random() * 5 + 1);   // total number of row 10 - 20
-        this.field = (int) (Math.random() * 5 + 1); // total number of field 10 - 20
+        this.row = (int) (Math.random() * 6 + 1);   // total number of row 1 - 5
+        this.field = (int) (Math.random() * 6 + 1); // total number of field 1 - 5
         status = new Status[this.row][this.field];
         initializeStatus();
         dataHandler = new DataHandling();
@@ -124,6 +124,7 @@ public class Farm {
         this.status[row][field] = status;
     }
 
+    // Initialize the status of row and field of a certain farm
     public void initializeStatus() {
         for (int row = 0; row < status.length; row++) {
             for (int column = 0; column < status[row].length; column++) {
@@ -132,14 +133,7 @@ public class Farm {
         }
     }
 
-//    public void resetLock() {
-//        for (int row = 0; row < status.length; row++) {
-//            for (int column = 0; column < status[row].length; column++) {
-//                status[row][column].setLock(new ReentrantLock());
-//            }
-//        }
-//    }
-
+    // Log the farm activities
     public void logActivityRecord(String log) {
         if (logger == null) {
             logger = new IFarmLogger(_id);
@@ -147,6 +141,7 @@ public class Farm {
         logger.logFarmActivities(log);
     }
 
+    // Submit activity into data handling to insert the activity data into the database
     public Future<Boolean> submitActivity(Activity activity) {
         return dataHandler.addElementIntoQueue(activity);
     }
