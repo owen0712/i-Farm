@@ -118,7 +118,7 @@ public class Main {
             }
             System.out.println("Disaster!!!");
             try{
-                Thread.sleep(1000);
+                Thread.sleep(5000);
             } catch(InterruptedException e){
                 e.printStackTrace();
             }

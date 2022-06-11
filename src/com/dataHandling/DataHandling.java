@@ -31,8 +31,10 @@ public class DataHandling implements Runnable {
     }
 
     public Future<Boolean> addElementIntoQueue(Activity activity) {
-        activity.set_id("A" + activityId);
-        activityId.getAndIncrement();
+        synchronized(DataHandling.class) {
+            activity.set_id("A" + activityId);
+            activityId.getAndIncrement();
+        }
         if(Integer.parseInt(activity.get_id().substring(1,2))%2==0)
             return threadPool_1.submit(new DataEntryWorker(activity, dao_1));
         else
