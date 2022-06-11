@@ -410,4 +410,31 @@ public class DAO {
         }
         return activityList;
     }
+
+    public List<Activity> getFirstAndLastRecord(String farmId) {
+        PreparedStatement statement;
+        List<Activity> activityList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("(SELECT * from activities where farmId=? order by Date ASC LIMIT 1) UNION " +
+                    "(SELECT * from activities order by Date DESC LIMIT 1)");
+            statement.setString(1, farmId);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                Activity activity = new Activity();
+                activity.setFarmId(result.getString("farmId"));
+                activity.setUserId(result.getString("userId"));
+                activity.setDate(result.getString("date"));
+                activity.setAction(result.getString("action"));
+                activity.setType(result.getString("type"));
+                activity.setUnit(result.getString("unit"));
+                activity.setQuantity(result.getDouble("quantity"));
+                activity.setField(result.getInt("field"));
+                activity.setRow(result.getInt("farm_row"));
+                activityList.add(activity);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return activityList;
+    }
 }

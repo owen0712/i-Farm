@@ -9,7 +9,6 @@ import com.plant.Plant;
 import com.util.DAO;
 import com.util.UnitConverter;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class DataVisualizer {
@@ -22,6 +21,9 @@ public class DataVisualizer {
     private Map<String, String> chosenMap = new HashMap<>();
     private UnitConverter unitConverter;
     private List<String> chosenIdList = new ArrayList<>();
+    private String startDate = "";
+    private String endDate = "";
+    private List<Activity> firstLastActivity = new ArrayList<>();
 
     DAO dao = new DAO();
     Farmer[] farmers = dao.getFarmerData();
@@ -56,47 +58,64 @@ public class DataVisualizer {
                 "4. Display all activity logs for a target farm and plant / fertilizer / pesticide between date A and date B (inclusive)\n" +
                 "5. Display summarized logs by plants, fertilizers and pesticides for a target farm and plant / fertilizer / pesticide between date A and date B (inclusive) for selected field and row number.\n" +
                 "6. Exit Ifarm. ");
+
         System.out.print("\nPlease choose a mode: ");
         int mode = sc.nextInt();
         System.out.println();
+
         while (true) {
-            switch (mode) {
-                case 1:
-                    model1();
-                    System.out.print("\nPlease choose a mode again: ");
-                    mode = sc.nextInt();
-                    System.out.println();
-                    break;
-                case 2:
-                    model2();
-                    System.out.print("\nPlease choose a mode again: ");
-                    mode = sc.nextInt();
-                    System.out.println();
-                    break;
-                case 3:
-                    model3();
-                    System.out.print("\nPlease choose a mode again: ");
-                    mode = sc.nextInt();
-                    System.out.println();
-                    break;
-                case 4:
-                    model4();
-                    System.out.print("\nPlease choose a mode again: ");
-                    mode = sc.nextInt();
-                    System.out.println();
-                    break;
-                case 5:
-                    model5();
-                    System.out.print("\nPlease choose a mode again: ");
-                    mode = sc.nextInt();
-                    System.out.println();
-                    break;
-                case 6:
-                    System.out.println("Thank you so much!!!");
-                    System.exit(-1);
-                default:
-                    System.out.println("\nPlease insert a number in the range 1 - 6");
-                    break;
+            try {
+                System.out.println("Below are the display mode:\n" +
+                        "1. Display all activity logs for a target farm.\n" +
+                        "2. Display all activity logs for a target farmer\n" +
+                        "3. Display all activity logs for a target farm and plant / fertilizer / pesticide\n" +
+                        "4. Display all activity logs for a target farm and plant / fertilizer / pesticide between date A and date B (inclusive)\n" +
+                        "5. Display summarized logs by plants, fertilizers and pesticides for a target farm and plant / fertilizer / pesticide between date A and date B (inclusive) for selected field and row number.\n" +
+                        "6. Exit Ifarm. ");
+                System.out.print("\nPlease choose a mode: ");
+                mode = sc.nextInt();
+                System.out.println();
+                switch (mode) {
+                    case 1:
+                        model1();
+                        System.out.print("\nPlease choose a mode again: ");
+                        mode = sc.nextInt();
+                        System.out.println();
+                        break;
+                    case 2:
+                        model2();
+                        System.out.print("\nPlease choose a mode again: ");
+                        mode = sc.nextInt();
+                        System.out.println();
+                        break;
+                    case 3:
+                        model3();
+                        System.out.print("\nPlease choose a mode again: ");
+                        mode = sc.nextInt();
+                        System.out.println();
+                        break;
+                    case 4:
+                        model4();
+                        System.out.print("\nPlease choose a mode again: ");
+                        mode = sc.nextInt();
+                        System.out.println();
+                        break;
+                    case 5:
+                        model5();
+                        System.out.print("\nPlease choose a mode again: ");
+                        mode = sc.nextInt();
+                        System.out.println();
+                        break;
+                    case 6:
+                        System.out.println("Thank you so much!!!");
+                        System.exit(-1);
+                    default:
+                        System.out.println("\nPlease insert a number in the range 1 - 6");
+                        break;
+                }
+            } catch (Exception e) {
+                sc.nextLine();
+                System.out.println("Please input integer");
             }
         }
     }
@@ -107,7 +126,7 @@ public class DataVisualizer {
         printFarm();
 
         System.out.print("\nPlease choose a farm with farm id: ");
-        String farmId = sc.nextLine();
+        String farmId = sc.nextLine().toUpperCase();
         System.out.println();
 
         while (!checkFarmId(farmId.replace(" ", ""))) {
@@ -118,9 +137,12 @@ public class DataVisualizer {
         }
 
         List<Activity> farmActivityList = dao.getActivityByFarmId(farmId);
-
-        System.out.println("Activity log for farm " + farmId);
-        printResult(farmActivityList);
+        if (farmActivityList.isEmpty()) {
+            System.out.println("Sorry, not have such record.");
+        } else {
+            System.out.println("Activity log for farm " + farmId);
+            printResult(farmActivityList);
+        }
     }
 
     private void model2() {
@@ -132,10 +154,10 @@ public class DataVisualizer {
         }
 
         System.out.print("\nPlease choose a farmer with farmer id: ");
-        String farmerId = sc.nextLine();
+        String farmerId = sc.nextLine().toUpperCase();
         System.out.println();
 
-        while (!checkFarmerId(farmerId)) {
+        while (!checkFarmerId(farmerId.replace(" ", ""))) {
             System.out.println("Sorry, please enter correct farmer id");
             System.out.print("Please try again: ");
             farmerId = sc.nextLine();
@@ -144,8 +166,12 @@ public class DataVisualizer {
 
         List<Activity> farmerActivity = dao.getActivityByFarmerId(String.valueOf(farmerId));
 
-        System.out.println("Activity log for farmer " + farmerId);
-        printResult(farmerActivity);
+        if (farmerActivity.isEmpty()) {
+            System.out.println("Sorry, not have such record.");
+        } else {
+            System.out.println("Activity log for farmer " + farmerId);
+            printResult(farmerActivity);
+        }
     }
 
     private void model3() {
@@ -154,13 +180,13 @@ public class DataVisualizer {
         printFarm();
 
         System.out.print("\nPlease choose a farm with farm id: ");
-        String farmId = sc.nextLine();
+        String farmId = sc.nextLine().toUpperCase();
         System.out.println();
 
-        while (!checkFarmId(farmId)) {
+        while (!checkFarmId(farmId.replace(" ", ""))) {
             System.out.println("Sorry, please enter correct farm id");
             System.out.print("Please try again: ");
-            farmId = sc.nextLine();
+            farmId = sc.nextLine().toUpperCase();
             System.out.println();
         }
 
@@ -179,7 +205,7 @@ public class DataVisualizer {
         printPlantFertilisePesticides(displayType, farmId);
 
         System.out.print("\nPlease input an id of the type chosen(plant/fertilizer/pesticide): ");
-        String chosenId = sc.nextLine();
+        String chosenId = sc.nextLine().toUpperCase();
         System.out.println();
 
         while (!checkChosenId(chosenId)) {
@@ -195,10 +221,10 @@ public class DataVisualizer {
 
         if (farmAndTypeList.isEmpty()) {
             System.out.println("Sorry, not have such record.");
+        } else {
+            System.out.println("Activity log for farmer " + farmId);
+            printResult(farmAndTypeList);
         }
-
-        System.out.println("Activity log for farmer " + farmId);
-        printResult(farmAndTypeList);
     }
 
     private void model4() {
@@ -207,15 +233,17 @@ public class DataVisualizer {
         printFarm();
 
         System.out.print("\nPlease choose a farm with farm id: ");
-        String farmId = sc.nextLine();
+        String farmId = sc.nextLine().toUpperCase();
         System.out.println();
 
-        while (!checkFarmId(farmId)) {
+        while (!checkFarmId(farmId.replace(" ", ""))) {
             System.out.println("Sorry, please enter correct farm id");
-            System.out.println("Please try again: ");
+            System.out.print("Please try again: ");
             farmId = sc.nextLine();
             System.out.println();
         }
+
+        firstLastActivity = dao.getFirstAndLastRecord(farmId);
 
         System.out.print("Choose one type to display(plant/fertilizer/pesticide): ");
         String displayType = sc.nextLine();
@@ -232,7 +260,7 @@ public class DataVisualizer {
         printPlantFertilisePesticides(displayType, farmId);
 
         System.out.print("\nPlease input an id of the type chosen(plant/fertilizer/pesticide): ");
-        String chosenId = sc.nextLine();
+        String chosenId = sc.nextLine().toUpperCase();
         System.out.println();
 
         while (!checkChosenId(chosenId)) {
@@ -244,11 +272,14 @@ public class DataVisualizer {
 
         String chosenName = this.chosenMap.get(chosenId);
 
-        System.out.print("Please input start date (year.month.date.hour.min.ss)(exp: 2022.06.02.11.12.32): ");
+        this.startDate = firstLastActivity.get(0).getDate();
+        this.endDate = firstLastActivity.get(1).getDate();
+
+        System.out.printf("Please input start date (year.month.date.hour.min.ss)(exp: %s): ", this.startDate);
         String dateStart = sc.nextLine();
         System.out.println();
 
-        System.out.print("Please input end date (year.month.date.hour.min.ss)(exp: 2022.06.02.11.33.24): ");
+        System.out.printf("Please input end date (year.month.date.hour.min.ss)(exp: %s): ", this.endDate);
         String dateEnd = sc.nextLine();
         System.out.println();
 
@@ -256,10 +287,10 @@ public class DataVisualizer {
 
         if (farmAndTypeBetweenDateList.isEmpty()) {
             System.out.println("Sorry, not have such record.");
+        } else {
+            System.out.println("Activity log for farmer " + farmId);
+            printResult(farmAndTypeBetweenDateList);
         }
-
-        System.out.println("Activity log for farmer " + farmId);
-        printResult(farmAndTypeBetweenDateList);
     }
 
     private void model5() {
@@ -268,15 +299,17 @@ public class DataVisualizer {
         printFarm();
 
         System.out.print("\nPlease choose a farm with farm id: ");
-        String farmId = sc.nextLine();
+        String farmId = sc.nextLine().toUpperCase();
         System.out.println();
 
-        while (!checkFarmId(farmId)) {
+        while (!checkFarmId(farmId.replace(" ", ""))) {
             System.out.println("Sorry, please enter correct farm id");
             System.out.print("Please try again: ");
-            farmId = sc.nextLine();
+            farmId = sc.nextLine().toUpperCase();
             System.out.println();
         }
+
+        firstLastActivity = dao.getFirstAndLastRecord(farmId);
 
         System.out.print("Choose one type to display(plant/fertilizer/pesticide): ");
         String displayType = sc.nextLine();
@@ -293,7 +326,7 @@ public class DataVisualizer {
         printPlantFertilisePesticides(displayType, farmId);
 
         System.out.print("\nPlease input an id of the type chosen(plant/fertilizer/pesticide): ");
-        String chosenId = sc.nextLine();
+        String chosenId = sc.nextLine().toUpperCase();
         System.out.println();
 
         while (!checkChosenId(chosenId)) {
@@ -316,11 +349,15 @@ public class DataVisualizer {
         System.out.println();
 
         sc.nextLine();
-        System.out.print("Please input start date (year.month.date.hour.min.ss)(exp: 2022.06.02.11.12.32): ");
+
+        this.startDate = firstLastActivity.get(0).getDate();
+        this.endDate = firstLastActivity.get(1).getDate();
+
+        System.out.printf("Please input start date (year.month.date.hour.min.ss)(exp: %s): ", this.startDate);
         String dateStart = sc.nextLine();
         System.out.println();
 
-        System.out.print("Please input end date (year.month.date.hour.min.ss)(exp: 2022.06.02.11.33.24): ");
+        System.out.printf("Please input end date (year.month.date.hour.min.ss)(exp: %s): ", this.endDate);
         String dateEnd = sc.nextLine();
         System.out.println();
 
@@ -329,25 +366,24 @@ public class DataVisualizer {
 
         if (farmAndTypeBetweenDateListWithFieldRowList.isEmpty()) {
             System.out.println("Sorry, not have such record.");
-        }
-
-        for (Activity activity : farmAndTypeBetweenDateListWithFieldRowList) {
-            if (activityTypeMap.containsKey(activity.getAction())) {
-                if (activityTypeMap.get(activity.getAction()).containsKey(activity.getType())) {
-                    double totalUnit = activityTypeMap.get(activity.getAction()).get(activity.getType()) +
-                            unitConverter.getConvertValue(activity.getQuantity(), activity.getUnit());
-                    activityTypeMap.get(activity.getAction()).put(activity.getType(), totalUnit);
+        } else {
+            for (Activity activity : farmAndTypeBetweenDateListWithFieldRowList) {
+                if (activityTypeMap.containsKey(activity.getAction())) {
+                    if (activityTypeMap.get(activity.getAction()).containsKey(activity.getType())) {
+                        double totalUnit = activityTypeMap.get(activity.getAction()).get(activity.getType()) +
+                                unitConverter.getConvertValue(activity.getQuantity(), activity.getUnit());
+                        activityTypeMap.get(activity.getAction()).put(activity.getType(), totalUnit);
+                    } else {
+                        activityTypeMap.get(activity.getAction()).put(activity.getType(), activity.getQuantity());
+                    }
                 } else {
-                    activityTypeMap.get(activity.getAction()).put(activity.getType(), activity.getQuantity());
+                    Map<String, Double> tempMap = new HashMap<>();
+                    tempMap.put(activity.getType(), activity.getQuantity());
+                    activityTypeMap.put(activity.getAction(), tempMap);
                 }
-            } else {
-                Map<String, Double> tempMap = new HashMap<>();
-                tempMap.put(activity.getType(), activity.getQuantity());
-                activityTypeMap.put(activity.getAction(), tempMap);
             }
+            printSummaryMapMode5(activityTypeMap, fieldSelected, rowSelected);
         }
-
-        printSummaryMapMode5(activityTypeMap, fieldSelected, rowSelected);
     }
 
     private void printFarm() {
@@ -429,7 +465,6 @@ public class DataVisualizer {
     private void printPesticide(String farmId) {
         System.out.println("Below is the list of pesticide id used in the farm " + farmId);
         this.indexFarmId = retrieveFarmIdIndex(farmId);
-        System.out.println("asdasdasd: " + indexFarmId);
         Pesticide[] pesticides = Main.farms[indexFarmId].getPesticides();
         Arrays.sort(pesticides, Comparator.comparing(Pesticide::get_id));
 
@@ -470,7 +505,7 @@ public class DataVisualizer {
         for (Activity activity : farmActivityList) {
             System.out.printf("%-10s %-75s Field %2d  Row %2d  %-6.2f%-10s %-10s\n",
                     activity.getAction(), activity.getType(), activity.getField(), activity.getRow(),
-                    unitConverter.getConvertValue(activity.getQuantity(), activity.getUnit()),"kg", activity.getDate());
+                    unitConverter.getConvertValue(activity.getQuantity(), activity.getUnit()), "kg", activity.getDate());
         }
     }
 }
