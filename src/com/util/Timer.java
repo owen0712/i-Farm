@@ -3,11 +3,11 @@ package com.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Timer {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+    private static final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy.MM.dd HH.mm.ss");
 
     private static volatile int fakeTimeInSecond = 0;
     private static final String FAKE_START_TIME = "2022.05.01"; // Set a start fake time
@@ -16,9 +16,10 @@ public class Timer {
     private static boolean isEnd;
 
     public static String getCurrentTime() {
-        return sdf.format(System.currentTimeMillis());
+        return sdf2.format(System.currentTimeMillis());
     }
 
+    // Get the fake time
     public static synchronized String getFakeTime(){
         try{
             Calendar cal = Calendar.getInstance();
@@ -30,6 +31,7 @@ public class Timer {
         }
     }
 
+    // Timer Thread will call this method, every one second will increase the fakeTimeInSecond
     public static void updateTime(){
         try{
             Thread.sleep(1000);
@@ -39,27 +41,27 @@ public class Timer {
         }
     }
 
+    // Check whether the timer is end
     public static boolean isEnd() {
         return isEnd;
     }
 
+    // End the timer
     public static void setEnd(boolean end) {
         isEnd = end;
     }
 
-    /*If return true, the thread will throw exception and die
-    * In main class, there will be a loop always check whether all threads die already or not
-    * If all threads die already, it will start all the threads one more time
-    * The timer will restart again, using Timer timer = new Timer()
-    * Start time and Disaster time will be reset again, farm may face the disaster again*/
+    // The disaster time will continue for few seconds
     public static boolean isDisasterTime(){
         return fakeTimeInSecond >= disasterTime && fakeTimeInSecond <= disasterTime + 2;
     }
 
+    // Set the disaster time
     public static void setDisasterTime(int time) {
         disasterTime = time;
     }
 
+    // Get the disaster time
     public static int getDisasterTime() {
         return disasterTime;
     }

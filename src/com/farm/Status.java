@@ -10,6 +10,7 @@ public class Status {
     private String action;
     private Plant plant;
 
+    // Initialize the reentrance lock, action and plant
     public Status(){
         this.lock = new ReentrantLock();
         this.action = null;
