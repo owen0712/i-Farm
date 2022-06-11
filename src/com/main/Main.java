@@ -123,7 +123,7 @@ public class Main {
                 e.printStackTrace();
             }
             for(Farm farm: farms){
-                farm.resetLock();
+                farm.initializeStatus();
             }
             farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
             for (Farmer farmer : farmers) {
@@ -144,6 +144,12 @@ public class Main {
         System.out.println("End Time: " + endTime);
 //        System.out.println("Time used: "+ (endTime-startTime));
         System.out.println("All thread have been terminated");
+
+        try{
+            timerThread.join();
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
 
         DataVisualizer dataVisualizer = new DataVisualizer();
 

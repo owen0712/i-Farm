@@ -124,7 +124,7 @@ public class Farm {
         this.status[row][field] = status;
     }
 
-    private void initializeStatus() {
+    public void initializeStatus() {
         for (int row = 0; row < status.length; row++) {
             for (int column = 0; column < status[row].length; column++) {
                 status[row][column] = new Status();
@@ -132,13 +132,13 @@ public class Farm {
         }
     }
 
-    public void resetLock() {
-        for (int row = 0; row < status.length; row++) {
-            for (int column = 0; column < status[row].length; column++) {
-                status[row][column].setLock(new ReentrantLock());
-            }
-        }
-    }
+//    public void resetLock() {
+//        for (int row = 0; row < status.length; row++) {
+//            for (int column = 0; column < status[row].length; column++) {
+//                status[row][column].setLock(new ReentrantLock());
+//            }
+//        }
+//    }
 
     public void logActivityRecord(String log) {
         if (logger == null) {
