@@ -1,12 +1,14 @@
 package com.farm;
 
+import com.plant.Plant;
+
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Status {
 
     private ReentrantLock lock;
     private String action;
-    private String plant;
+    private Plant plant;
 
     public Status(){
         this.lock = new ReentrantLock();
@@ -29,4 +31,8 @@ public class Status {
     public void setAction(String action) {
         this.action = action;
     }
+
+    public Plant getPlant() { return plant; }
+
+    public void setPlant(Plant plant) { this.plant = plant; }
 }

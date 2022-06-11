@@ -4,6 +4,7 @@ import com.activity.Activity;
 import com.dataHandling.DataHandling;
 import com.farm.Farm;
 import com.farm.Status;
+import com.plant.Plant;
 import com.util.IFarmLogger;
 import com.util.Timer;
 import com.util.UnitConverter;
@@ -107,11 +108,19 @@ public class Farmer implements Runnable {
 
         String type;
         String unitType;
+        Plant plant = null;
         switch (action) {
-            case "sowing", "harvest", "sales" -> {
+            case "sowing" -> {
                 int plantIndex = (int) (Math.random() * (farm.getPlants().length));
-                type = farm.getPlants()[plantIndex].getName();
-                unitType = farm.getPlants()[plantIndex].getUnitType();
+                plant = farm.getPlants()[plantIndex];
+                type = plant.getName();
+                unitType = plant.getUnitType();
+                status.setPlant(plant);
+            }
+            case "harvest", "sales" -> {
+                plant = status.getPlant();
+                type = plant.getName();
+                unitType = plant.getUnitType();
             }
             case "fertilizer" -> {
                 int fertilizerIndex = (int) (Math.random() * (farm.getFertilizes().length));
@@ -169,6 +178,7 @@ public class Farmer implements Runnable {
         //when action is harvesting, the action will change to null
         if (action.equals("sales")){
             status.setAction(null);
+            status.setPlant(null);
         }else{
             status.setAction(action);
         }
