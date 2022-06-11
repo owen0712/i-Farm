@@ -102,8 +102,10 @@ public class Farmer implements Runnable {
         //check the row and field current action and decide the next action
         if(status.getAction()==null){
             action = this.actionList[0];
+        }else if(status.getAction().equals("harvest")){
+            action = this.actionList[4];
         }else{
-            action = this.actionList[(int)(Math.random()*(this.actionList.length-1)+1)];
+            action = this.actionList[(int)(Math.random()*(this.actionList.length-2)+1)];
         }
 
         String type;
