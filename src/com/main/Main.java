@@ -36,29 +36,21 @@ public class Main {
         //Getting farms from db
         farms = dao.getFarmData();
 
-        //Start data handling thread
-        Thread dataHandlingThread = new Thread(new DataHandling());
-        dataHandlingThread.start();
-
         //Generate Farmer
         Random random = new Random();
 //        int randomFarmerNumber = random.nextInt(100);
         int randomFarmerNumber = 100;
-        ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
         FarmerSimulator simulator = new FarmerSimulator();
         Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
         //Setup timer and timer thread
         TimerThread timerThread = new TimerThread();
         timerThread.start();
-        String startTime = Timer.getCurrentTime();
+        String startTime = new Date(Timer.getCurrentTime());
 
         //Start farmer thread
         for (Farmer farmer : farmers) {
-            Thread farmerThread = new Thread(farmer);
-            farmerThread.start();
-            while(farmerThread.isAlive()){
-            }
+            farmer.runSequentialTask();
         }
 
         //Record End Time

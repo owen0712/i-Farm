@@ -2,9 +2,12 @@ package com.farmer;
 
 import com.activity.Activity;
 import com.dataHandling.DataHandling;
+import com.dataHandling.SequentialDataHandling;
 import com.farm.Farm;
 import com.farm.Status;
+import com.main.Main;
 import com.plant.Plant;
+import com.util.DAO;
 import com.util.IFarmLogger;
 import com.util.Timer;
 import com.util.UnitConverter;
@@ -222,6 +225,126 @@ public class Farmer implements Runnable {
             //When the number of activity is cleared
             Farm farm = (Farm) farmNumberActivity.keySet().toArray()[currentFarm];
             generateActivity(farm);
+            if(farmNumberActivity.get(farm) == 1){
+                farmNumberActivity.remove(farm);
+            }
+            else {
+                farmNumberActivity.put(farm, (farmNumberActivity.get(farm) - 1));
+            }
+        }
+    }
+
+    public void generateSequentialActivity(Farm farm){
+        int field = (int)(Math.random()*farm.getField());
+        int row = (int)(Math.random()*farm.getRow());
+        Status status = farm.getStatusByRowAndField(row,field);
+        String action;
+
+        //check the row and field current action and decide the next action
+        if(status.getAction()==null){
+            action = this.actionList[0];
+        }else if(status.getAction().equals("harvest")){
+            action = this.actionList[4];
+        }else{
+            action = this.actionList[(int)(Math.random()*(this.actionList.length-2)+1)];
+        }
+
+        String type;
+        String unitType;
+        Plant plant = null;
+        switch (action) {
+            case "sowing" -> {
+                int plantIndex = (int) (Math.random() * (farm.getPlants().length));
+                plant = farm.getPlants()[plantIndex];
+                type = plant.getName();
+                unitType = plant.getUnitType();
+                status.setPlant(plant);
+            }
+            case "harvest", "sales" -> {
+                plant = status.getPlant();
+                type = plant.getName();
+                unitType = plant.getUnitType();
+            }
+            case "fertilizer" -> {
+                int fertilizerIndex = (int) (Math.random() * (farm.getFertilizes().length));
+                type = farm.getFertilizes()[fertilizerIndex].getName();
+                unitType = farm.getFertilizes()[fertilizerIndex].getUnitType();
+            }
+            case "pesticide" -> {
+                int pesticideIndex = (int) (Math.random() * (farm.getPesticides().length));
+                type = farm.getPesticides()[pesticideIndex].getName();
+                unitType = farm.getPesticides()[pesticideIndex].getUnitType();
+            }
+            default -> {
+                type = "N/A";
+                unitType = "N/A";
+            }
+        }
+
+        String unit;
+        double quantity;
+        // Randomly generate unit either [kg or g] for mass, [l or ml] for volume, [pack(1kg) or pack(500g)]for pack
+        // Randomly generate quantity for kg (within 10) or g (within 1000)
+        // Math.round(value*100.0)/100.0 to convert double value to two decimal
+        switch (unitType) {
+            case "mass" -> {
+                unit = (Math.random()<0.5) ? "kg" : "g";
+                quantity = (unit.equals("kg")) ? Math.round((Math.random()*10)*100.0)/100.0 : Math.round((Math.random()*1000)*100.0)/100.0;
+            }
+            case "volume" -> {
+                unit = (Math.random()<0.5) ? "l" : "ml";
+                quantity = (unit.equals("l")) ? Math.round((Math.random()*10)*100.0)/100.0 : Math.round((Math.random()*1000)*100.0)/100.0;
+            }
+            case "pack" -> {
+                unit = (Math.random()<0.5) ? "packs(1kg)" : "packs(500g)";
+                quantity = (int)(Math.random()*10+1);
+            }
+            default -> {
+                unit = "N/A";
+                quantity = -1.0;
+            }
+        }
+
+        Activity activity = new Activity(farm.get_id(), this._id, Timer.getFakeTime(), action, type, unit, quantity, field, row);
+
+        SequentialDataHandling dataHandling = new SequentialDataHandling();
+        dataHandling.submitAvtivity(activity);
+
+        //switch the action of current row and field to the next action
+        //when action is harvesting, the action will change to null
+        if (action.equals("sales")){
+            status.setAction(null);
+            status.setPlant(null);
+        }else{
+            status.setAction(action);
+        }
+        //log in to logfile
+        //format: (Sowing Plant Field 1 Row 1 1.5 UnitType at FarmName 2022-05-18)
+        if(logger==null) {
+            logger = new IFarmLogger(this);
+        }
+    }
+
+    public void runSequentialTask() {
+        // Create how many number of activity each farm must have
+        totalActNum = 0;
+        for (Farm farm : farmList) {
+//        int randNum = (int) Math.floor(Math.random() * (500) + 1 + 1000);
+            int randNum = 100;
+            totalActNum += randNum;
+            farmNumberActivity.put(farm, randNum);
+        }
+
+        // Start for loop
+        for (int i = 0; i < totalActNum; i++) {
+
+            // Farmer randomly pick one farm
+            int currentFarm = (int) Math.floor(Math.random() * (farmNumberActivity.size()));
+
+
+            //When the number of activity is cleared
+            Farm farm = (Farm) farmNumberActivity.keySet().toArray()[currentFarm];
+            generateSequentialActivity(farm);
             if(farmNumberActivity.get(farm) == 1){
                 farmNumberActivity.remove(farm);
             }
