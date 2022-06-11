@@ -50,17 +50,11 @@ public class IFarmLogger {
         }
     }
 
-    public synchronized void logFarmerActivities(String text) {
+    public void logFarmActivities(String text) {
         logger.info(text);
     }
 
-    public synchronized void logFarmActivities(String text) {
+    public void logErrorMessage(String text) {
         logger.info(text);
-        fileHandler.close();
-    }
-
-    public synchronized void logErrorMessage(String text) {
-        logger.info(text);
-        fileHandler.close();
     }
 }

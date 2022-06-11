@@ -46,7 +46,7 @@ public class Main {
         //Setup timer and timer thread
         TimerThread timerThread = new TimerThread();
         timerThread.start();
-        String startTime = new Date(Timer.getCurrentTime());
+        String startTime = Timer.getCurrentTime();
 
         //Start farmer thread
         for (Farmer farmer : farmers) {
