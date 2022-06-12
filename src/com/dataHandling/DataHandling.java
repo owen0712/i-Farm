@@ -22,6 +22,8 @@ public class DataHandling implements Runnable {
     private DAO dao_1;
     private DAO dao_2;
 
+
+    // Constructor
     public DataHandling() {
         this.threadPool_1 = Executors.newCachedThreadPool();
         this.threadPool_2 = Executors.newCachedThreadPool();
@@ -30,11 +32,14 @@ public class DataHandling implements Runnable {
         this.dao_2 = new DAO();
     }
 
+    // Return future boolean, return true if activity had been successfully insert into db
     public Future<Boolean> addElementIntoQueue(Activity activity) {
         synchronized(DataHandling.class) {
+            // set activityId as atomic since cannot auto increment in db
             activity.set_id("A" + activityId);
             activityId.getAndIncrement();
         }
+        // two threadpools, one accept odd number of Activity Id, even number of Activity Id
         if(Integer.parseInt(activity.get_id().substring(1,2))%2==0)
             return threadPool_1.submit(new DataEntryWorker(activity, dao_1));
         else
@@ -43,6 +48,7 @@ public class DataHandling implements Runnable {
 
     @Override
     public void run() {
+        // always checking time, if time end, then break this while loop to shut down thread-pools
         while (true) {
             if (Timer.isEnd()) {
                 break;

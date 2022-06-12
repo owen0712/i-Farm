@@ -521,7 +521,6 @@ public class DataVisualizer {
 
         for (int i = 0; i < plants.length; i++) {
             System.out.print(plants[i].get_id() + ", ");
-            System.out.print(plants[i].getName() + ", ");
             this.chosenIdList.add(plants[i].get_id());
             this.chosenMap.put(plants[i].get_id(), plants[i].getName());
         }
