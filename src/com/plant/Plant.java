@@ -6,6 +6,7 @@ public class Plant {
     private String name;
     private String unitType;
 
+    //constructor
     public Plant(String _id, String name, String unitType) {
         this._id = _id;
         this.name = name;
@@ -14,6 +15,7 @@ public class Plant {
 
     public Plant() {}
 
+    //all the getter and setter
     public String get_id() {
         return _id;
     }
