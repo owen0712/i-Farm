@@ -21,7 +21,6 @@ public class Farmer implements Runnable {
     private String password;
     private String phoneNumber;
     private Farm[] farmList;
-    private IFarmLogger logger;
     private final String[] actionList = {"sowing","fertilizer","pesticide","harvest","sales"};
     private Map<Farm, Integer> farmNumberActivity = new HashMap<>();
     private int totalActNum;
@@ -193,10 +192,6 @@ public class Farmer implements Runnable {
             status.setAction(action);
         }
 
-        //Create log file for the farmer if it is not existed
-        if(logger==null) {
-            logger = new IFarmLogger(this);
-        }
         //unlock the row and field
         status.getLock().unlock();
     }
@@ -329,11 +324,6 @@ public class Farmer implements Runnable {
             status.setPlant(null);
         }else{
             status.setAction(action);
-        }
-
-        //Create log file for the farmer if it is not existed
-        if(logger==null) {
-            logger = new IFarmLogger(this);
         }
     }
 

@@ -13,14 +13,19 @@ public class DataEntryWorker implements Callable {
     private Activity activity;
     private DAO dao;
 
+    //constructor
     public DataEntryWorker(Activity activity, DAO dao) {
         this.activity = activity;
         this.dao = dao;
     }
 
+    //call method to run concurrently
     @Override
     public Object call() throws Exception {
+        //insert record into database,return true if successfully insert the record, else return false
         boolean success = dao.insertActivityData(activity);
+
+        //write record into the log if successfully insert into database
         if (success) {
             try {
                 String logText = String.format("%s: %-5s -> %-10s %-50s Field %2d Row %2d %6.2f%-5s", activity.getDate(), activity.get_id(), activity.getAction(), activity.getType(), activity.getField(), activity.getRow(), activity.getQuantity(), activity.getUnit(), activity.getFarmId());

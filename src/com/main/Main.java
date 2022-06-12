@@ -8,6 +8,9 @@ import com.util.DAO;
 import com.util.Timer;
 import com.util.TimerThread;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,25 +19,14 @@ public class Main {
     public static Farm[] farms;
 
     public static void main(String[] args) throws InterruptedException {
-
-//        DAO dao = new DAO();
-//
-//        //Getting farms from db
-//        farms = dao.getFarmData();
-//
-//        DataVisualizer dataVisualizer = new DataVisualizer();
-//
-//        dataVisualizer.startDataVisualizer();
-        concurrent();
+        sequential();
+//        concurrent();
     }
 
     public static void sequential() {
         //Delete previous activity record
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
-
-        //Getting farms from db
-        farms = dao.getFarmData();
 
         //Generate Farmer
         Random random = new Random();
@@ -48,27 +40,35 @@ public class Main {
         timerThread.start();
         String startTime = Timer.getCurrentTime();
 
-        //Start farmer thread
+        //Start farmer activity in sequential form
         for (Farmer farmer : farmers) {
             farmer.runSequentialTask();
         }
+
+        //indicate generate activity completed, stop timer thread
+        Timer.setEnd(true);
 
         //Record End Time
         String endTime = Timer.getCurrentTime();
         System.out.println("Start Time: " + startTime);
         System.out.println("End Time: " + endTime);
-//        System.out.println("Time used: "+ (endTime-startTime));
+        try {
+            Date startDate=new SimpleDateFormat("YYYY.MM.dd HH.mm.ss").parse(startTime);
+            Date endDate=new SimpleDateFormat( "YYYY.MM.dd HH.mm.ss").parse(endTime);
+            System.out.println("Time used: "+ (endDate.getTime()-startDate.getTime())+" milliseconds");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         System.out.println("All thread have been terminated");
 
+        //Ensure timer thread end before start DataVisualizer
         try{
             timerThread.join();
         } catch(InterruptedException e){
             e.printStackTrace();
         }
 
-        Timer.setEnd(true);
-
-        //Idk should i declare at timerThread there or....
+        //start DataVisualizer
         DataVisualizer dataVisualizer = new DataVisualizer();
 
         dataVisualizer.startDataVisualizer();
@@ -80,9 +80,6 @@ public class Main {
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
 
-        //Getting farms from db
-//        farms = dao.getFarmData();
-
         //Generate Farmer
         Random random = new Random();
 //        int randomFarmerNumber = random.nextInt(100);
@@ -91,8 +88,10 @@ public class Main {
         FarmerSimulator simulator = new FarmerSimulator();
         Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
-        //Setup timer and timer thread
+        //Set disaster time to simulate disaster happened
         Timer.setDisasterTime(5);
+
+        //Setup timer and timer thread
         TimerThread timerThread = new TimerThread();
         timerThread.start();
         String startTime = Timer.getCurrentTime();
@@ -114,6 +113,7 @@ public class Main {
             } catch(InterruptedException e){
                 e.printStackTrace();
             }
+            //reset all lock and status of field and row
             for(Farm farm: farms){
                 farm.initializeStatus();
             }
@@ -123,26 +123,38 @@ public class Main {
             }
         }
 
+        //waiting all farmer to finish the work
         farmerThreadPool.shutdown();
         while (!farmerThreadPool.isTerminated()) {
             //wait all farmer finish job
         }
 
+        //indicate generate activity completed, stop timer thread
         Timer.setEnd(true);
 
         //Record End Time
         String endTime = Timer.getCurrentTime();
+
+        //Display startTime, endTime and time used
         System.out.println("Start Time: " + startTime);
         System.out.println("End Time: " + endTime);
-//        System.out.println("Time used: "+ (endTime-startTime));
+        try {
+            Date startDate=new SimpleDateFormat("YYYY.MM.dd HH.mm.ss").parse(startTime);
+            Date endDate=new SimpleDateFormat( "YYYY.MM.dd HH.mm.ss").parse(endTime);
+            System.out.println("Time used: "+ (endDate.getTime()-startDate.getTime())+" milliseconds");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         System.out.println("All thread have been terminated");
 
+        //Ensure timer thread end before start DataVisualizer
         try{
             timerThread.join();
         } catch(InterruptedException e){
             e.printStackTrace();
         }
 
+        //start DataVisualizer
         DataVisualizer dataVisualizer = new DataVisualizer();
 
         dataVisualizer.startDataVisualizer();

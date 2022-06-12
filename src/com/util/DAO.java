@@ -18,6 +18,7 @@ public class DAO {
     private static Connection connection;
     private static Farm[] tempFarm;
 
+    //constructor to initiate connection with database
     public DAO() {
         try {
             connection = DriverManager.getConnection(jdbcURL, username, password);
@@ -36,26 +37,6 @@ public class DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public Plant[] getPlantData() {
-        PreparedStatement statement;
-        List<Plant> plantList = new ArrayList<>();
-        try {
-            statement = connection.prepareStatement("SELECT * FROM plants");
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                //mapping result set to plant
-                Plant plant = new Plant();
-                plant.set_id(result.getString("_id"));
-                plant.setName(result.getString("name"));
-                plant.setUnitType(result.getString("unitType"));
-                plantList.add(plant);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return plantList.toArray(new Plant[plantList.size()]);
     }
 
     public Plant[] getPlantDataByFarmId(String farmId) {
@@ -79,26 +60,6 @@ public class DAO {
         return plantList.toArray(new Plant[plantList.size()]);
     }
 
-    public Fertilizer[] getFertilizerData() {
-        PreparedStatement statement;
-        List<Fertilizer> fertilizerList = new ArrayList<>();
-        try {
-            statement = connection.prepareStatement("SELECT * FROM fertilizers");
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                //mapping result set to fertilizer
-                Fertilizer fertilizer = new Fertilizer();
-                fertilizer.set_id(result.getString("_id"));
-                fertilizer.setName(result.getString("name"));
-                fertilizer.setUnitType(result.getString("unitType"));
-                fertilizerList.add(fertilizer);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return fertilizerList.toArray(new Fertilizer[fertilizerList.size()]);
-    }
-
     public Fertilizer[] getFertilizerDataByFarmId(String farmId) {
         PreparedStatement statement;
         List<Fertilizer> fertilizerList = new ArrayList<>();
@@ -120,32 +81,11 @@ public class DAO {
         return fertilizerList.toArray(new Fertilizer[fertilizerList.size()]);
     }
 
-    public Pesticide[] getPesticideData() {
-        PreparedStatement statement;
-        List<Pesticide> pesticideList = new ArrayList<>();
-        try {
-            statement = connection.prepareStatement("SELECT * FROM pesticides");
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                //mapping result set to pesticide
-                Pesticide pesticide = new Pesticide();
-                pesticide.set_id(result.getString("_id"));
-                pesticide.setName(result.getString("name"));
-                pesticide.setUnitType(result.getString("unitType"));
-                pesticideList.add(pesticide);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return pesticideList.toArray(new Pesticide[pesticideList.size()]);
-    }
-
     public Pesticide[] getPesticideDataByFarmId(String farmId) {
         PreparedStatement statement;
         List<Pesticide> pesticideList = new ArrayList<>();
         try {
             statement = connection.prepareStatement("SELECT * FROM farm_pesticide INNER JOIN pesticides ON farm_pesticide.pesticide_id=pesticides._id where farm_id=?");
-//            statement = connection.prepareStatement("SELECT * FROM farm_pesticide where farm_id=?");
             statement.setString(1, farmId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -192,7 +132,7 @@ public class DAO {
             statement = connection.prepareStatement("SELECT * FROM farms");
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                //mapping result set to farms
+                //mapping result set to farm
                 Farm farm = new Farm();
                 farm.set_id(result.getString("_id"));
                 farm.setName(result.getString("name"));
@@ -213,20 +153,11 @@ public class DAO {
         PreparedStatement statement;
         List<Farm> farmList = new ArrayList<>();
         try {
-//            statement = connection.prepareStatement("SELECT * FROM user_farm INNER JOIN farms ON user_farm.farm_id=farms._id where user_id=?");
             statement = connection.prepareStatement("SELECT * FROM user_farm where user_id=?");
             statement.setString(1, farmerId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                //mapping result set to farms
-//                Farm farm = new Farm();
-//                farm.set_id(result.getString("_id"));
-//                farm.setName(result.getString("name"));
-//                farm.setAddress(result.getString("address"));
-//                farm.setPlants(getPlantDataByFarmId(farm.get_id()));
-//                farm.setFertilizes(getFertilizerDataByFarmId(farm.get_id()));
-//                farm.setPesticides(getPesticideDataByFarmId(farm.get_id()));
-//                farmList.add(farm);
+                //to ensure all farmer get same farm object
                 int index = Integer.parseInt(result.getString("farm_id").substring(2)) - 1;
                 farmList.add(tempFarm[index]);
             }
@@ -266,6 +197,7 @@ public class DAO {
         }
     }
 
+    //get the record for data visualizer mode 1
     public List<Activity> getActivityByFarmId(String farmId) {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
@@ -293,6 +225,7 @@ public class DAO {
         return activityList;
     }
 
+    //get the record for data visualizer mode 2
     public List<Activity> getActivityByFarmerId(String userId) {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
@@ -320,6 +253,7 @@ public class DAO {
         return activityList;
     }
 
+    //get the record for data visualizer mode 3
     public List<Activity> getActivityByFarmerIdAndType(String farmId, String displayType) {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
@@ -349,6 +283,7 @@ public class DAO {
         return activityList;
     }
 
+    //get the record for data visualizer mode 4
     public List<Activity> getActivityByFarmerIdAndTypeBetweenDate(String farmId, String displayType, String date1, String date2) {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
@@ -379,6 +314,7 @@ public class DAO {
         return activityList;
     }
 
+    //get the record for data visualizer mode 5
     public List<Activity> getActivityByFarmerIdAndTypeBetweenDateWithFieldRow(String farmId, String displayType, String date1, String date2, int field, int row) {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();
@@ -411,6 +347,7 @@ public class DAO {
         return activityList;
     }
 
+    //get the startDate of simulation and endDate of simulation for data visualizer
     public List<Activity> getFirstAndLastRecord(String farmId) {
         PreparedStatement statement;
         List<Activity> activityList = new ArrayList<>();

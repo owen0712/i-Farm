@@ -1,7 +1,6 @@
 package com.util;
 
 import com.farm.Farm;
-import com.farmer.Farmer;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -11,19 +10,6 @@ import java.util.logging.SimpleFormatter;
 public class IFarmLogger {
     private Logger logger;
     private FileHandler fileHandler;
-
-    public IFarmLogger(Farmer farmer) {
-        //To set a specific logger for the received farmer
-        logger = Logger.getLogger(Farmer.class.getName() + farmer.get_id());
-        try {
-            //To create new FileHandler for text file path, exp : log/farmer/FMR01.txt
-            fileHandler = new FileHandler("log/farmer/" + farmer.get_id() + ".txt", true);
-            fileHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(fileHandler);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public IFarmLogger(String farmId) {
         //To set a specific logger for the received farm

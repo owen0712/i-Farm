@@ -316,12 +316,12 @@ public class DataVisualizer {
         this.endDate = firstLastActivity.get(1).getDate();
 
         // input date A
-        System.out.printf("Please input start date (year.month.date.hour.min.ss)(exp: %s): ", this.startDate);
+        System.out.printf("Please input start date (year.month.day)(exp: %s): ", this.startDate);
         String dateStart = sc.nextLine();
         System.out.println();
 
         // input date B
-        System.out.printf("Please input end date (year.month.date.hour.min.ss)(exp: %s): ", this.endDate);
+        System.out.printf("Please input end date (year.month.day)(exp: %s): ", this.endDate);
         String dateEnd = sc.nextLine();
         System.out.println();
 
@@ -419,12 +419,12 @@ public class DataVisualizer {
         this.endDate = firstLastActivity.get(1).getDate();
 
         // input date A
-        System.out.printf("Please input start date (year.month.date.hour.min.ss)(exp: %s): ", this.startDate);
+        System.out.printf("Please input start date (year.month.day)(exp: %s): ", this.startDate);
         String dateStart = sc.nextLine();
         System.out.println();
 
         // input date B
-        System.out.printf("Please input end date (year.month.date.hour.min.ss)(exp: %s): ", this.endDate);
+        System.out.printf("Please input end date (year.month.day)(exp: %s): ", this.endDate);
         String dateEnd = sc.nextLine();
         System.out.println();
 
