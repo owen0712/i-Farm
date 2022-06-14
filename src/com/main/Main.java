@@ -19,19 +19,22 @@ public class Main {
     public static Farm[] farms;
 
     public static void main(String[] args) throws InterruptedException {
-        sequential();
-//        concurrent();
+//        sequential();
+        concurrent();
     }
 
     public static void sequential() {
-        //Delete previous activity record
+        //Delete previous record
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
+        dao.deleteAllFarmerFarmRecord();
+        dao.deleteAllFarmFertilizerRecord();
+        dao.deleteAllFarmPesticideRecord();
+        dao.deleteAllFarmPlantRecord();
 
         //Generate Farmer
         Random random = new Random();
-//        int randomFarmerNumber = random.nextInt(100);
-        int randomFarmerNumber = 100;
+        int randomFarmerNumber = random.nextInt(dao.getNumberOfFarmer()-100)+100;
         FarmerSimulator simulator = new FarmerSimulator();
         Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
@@ -76,20 +79,23 @@ public class Main {
     }
 
     public static void concurrent() {
-        //Delete previous activity record
+        //Delete previous record
         DAO dao = new DAO();
         dao.deleteAllActivityRecord();
+        dao.deleteAllFarmerFarmRecord();
+        dao.deleteAllFarmFertilizerRecord();
+        dao.deleteAllFarmPesticideRecord();
+        dao.deleteAllFarmPlantRecord();
 
         //Generate Farmer
         Random random = new Random();
-//        int randomFarmerNumber = random.nextInt(100);
-        int randomFarmerNumber = 100;
+        int randomFarmerNumber = random.nextInt(dao.getNumberOfFarmer()-100)+100;
         ExecutorService farmerThreadPool = Executors.newFixedThreadPool(randomFarmerNumber);
         FarmerSimulator simulator = new FarmerSimulator();
         Farmer[] farmers = simulator.generateFarmers(randomFarmerNumber);
 
         //Set disaster time to simulate disaster happened
-        Timer.setDisasterTime(5);
+//        Timer.setDisasterTime(5);
 
         //Setup timer and timer thread
         TimerThread timerThread = new TimerThread();

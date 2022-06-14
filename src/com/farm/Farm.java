@@ -15,7 +15,7 @@ public class Farm {
     private String name;
     private String address;
     private Pesticide[] pesticides;
-    private Fertilizer[] fertilizes;
+    private Fertilizer[] fertilizers;
     private Plant[] plants;
     private int row;
     private int field;
@@ -40,7 +40,7 @@ public class Farm {
         this.name = name;
         this.address = address;
         this.pesticides = pesticides;
-        this.fertilizes = fertilizes;
+        this.fertilizers = fertilizers;
         this.plants = plants;
         this.row = row;
         this.field = field;
@@ -85,11 +85,11 @@ public class Farm {
     }
 
     public Fertilizer[] getFertilizes() {
-        return fertilizes;
+        return fertilizers;
     }
 
-    public void setFertilizes(Fertilizer[] fertilizes) {
-        this.fertilizes = fertilizes;
+    public void setFertilizers(Fertilizer[] fertilizes) {
+        this.fertilizers = fertilizes;
     }
 
     public Plant[] getPlants() {
