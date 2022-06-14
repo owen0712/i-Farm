@@ -37,12 +37,12 @@ public class IFarmLogger {
         }
     }
 
-    //To synchronise the logger info by Farm Activities
+    //To info the Farm Activities
     public void logFarmActivities(String text) {
         logger.info(text);
     }
 
-    //To synchronise the logger info by Error Message
+    //To info the Error Message
     public void logErrorMessage(String text) {
         logger.info(text);
     }
