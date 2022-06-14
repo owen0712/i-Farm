@@ -9,6 +9,7 @@ import com.plant.Plant;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DAO {
@@ -39,6 +40,71 @@ public class DAO {
         }
     }
 
+    public void deleteAllFarmPesticideRecord() {
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("TRUNCATE farm_pesticide");
+            statement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAllFarmFertilizerRecord() {
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("TRUNCATE farm_fertilizer");
+            statement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAllFarmPlantRecord() {
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("TRUNCATE farm_plant");
+            statement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAllFarmerFarmRecord() {
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("TRUNCATE user_farm");
+            statement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Plant> getPlantData() {
+        PreparedStatement statement;
+        List<Plant> plantList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("SELECT * FROM plants");
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                //mapping result set to plant
+                Plant plant = new Plant();
+                plant.set_id(result.getString("_id"));
+                plant.setName(result.getString("name"));
+                plant.setUnitType(result.getString("unitType"));
+                plantList.add(plant);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Collections.shuffle(plantList);
+        return plantList;
+    }
+
     public Plant[] getPlantDataByFarmId(String farmId) {
         PreparedStatement statement;
         List<Plant> plantList = new ArrayList<>();
@@ -60,6 +126,27 @@ public class DAO {
         return plantList.toArray(new Plant[plantList.size()]);
     }
 
+    public List<Fertilizer> getFertilizerData() {
+        PreparedStatement statement;
+        List<Fertilizer> fertilizerList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("SELECT * FROM fertilizers");
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                //mapping result set to fertilizer
+                Fertilizer fertilizer = new Fertilizer();
+                fertilizer.set_id(result.getString("_id"));
+                fertilizer.setName(result.getString("name"));
+                fertilizer.setUnitType(result.getString("unitType"));
+                fertilizerList.add(fertilizer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Collections.shuffle(fertilizerList);
+        return fertilizerList;
+    }
+
     public Fertilizer[] getFertilizerDataByFarmId(String farmId) {
         PreparedStatement statement;
         List<Fertilizer> fertilizerList = new ArrayList<>();
@@ -79,6 +166,27 @@ public class DAO {
             e.printStackTrace();
         }
         return fertilizerList.toArray(new Fertilizer[fertilizerList.size()]);
+    }
+
+    public List<Pesticide> getPesticideData() {
+        PreparedStatement statement;
+        List<Pesticide> pesticideList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("SELECT * FROM pesticides");
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                //mapping result set to pesticide
+                Pesticide pesticide = new Pesticide();
+                pesticide.set_id(result.getString("_id"));
+                pesticide.setName(result.getString("name"));
+                pesticide.setUnitType(result.getString("unitType"));
+                pesticideList.add(pesticide);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Collections.shuffle(pesticideList);
+        return pesticideList;
     }
 
     public Pesticide[] getPesticideDataByFarmId(String farmId) {
@@ -116,7 +224,6 @@ public class DAO {
                 farmer.setEmail(result.getString("email"));
                 farmer.setPhoneNumber(result.getString("phoneNumber"));
                 farmer.setPassword(result.getString("password"));
-                farmer.setFarmList(getFarmDataByFarmerId(farmer.get_id()));
                 farmerList.add(farmer);
             }
         } catch (SQLException e) {
@@ -137,9 +244,6 @@ public class DAO {
                 farm.set_id(result.getString("_id"));
                 farm.setName(result.getString("name"));
                 farm.setAddress(result.getString("address"));
-                farm.setPlants(getPlantDataByFarmId(farm.get_id()));
-                farm.setFertilizes(getFertilizerDataByFarmId(farm.get_id()));
-                farm.setPesticides(getPesticideDataByFarmId(farm.get_id()));
                 farmList.add(farm);
             }
         } catch (SQLException e) {
@@ -147,24 +251,6 @@ public class DAO {
         }
         tempFarm = farmList.toArray(new Farm[farmList.size()]);
         return tempFarm;
-    }
-
-    public Farm[] getFarmDataByFarmerId(String farmerId) {
-        PreparedStatement statement;
-        List<Farm> farmList = new ArrayList<>();
-        try {
-            statement = connection.prepareStatement("SELECT * FROM user_farm where user_id=?");
-            statement.setString(1, farmerId);
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                //to ensure all farmer get same farm object
-                int index = Integer.parseInt(result.getString("farm_id").substring(2)) - 1;
-                farmList.add(tempFarm[index]);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return farmList.toArray(new Farm[farmList.size()]);
     }
 
     public static boolean insertActivityData(Activity activity) {
@@ -373,5 +459,107 @@ public class DAO {
             e.printStackTrace();
         }
         return activityList;
+    }
+
+    public int getNumberOfFarmer(){
+        PreparedStatement statement;
+        List<Activity> activityList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement("SELECT COUNT(*) from users" );
+            ResultSet result = statement.executeQuery();
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public boolean insertFarmPesticide(String farmId,String pesticideId){
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("INSERT INTO farm_pesticide(farm_id,pesticide_id) VALUES(?,?)");
+            statement.setString(1, farmId);
+            statement.setString(2, pesticideId);
+            statement.executeUpdate();
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            e.printStackTrace();
+            IFarmLogger logger = new IFarmLogger();
+            logger.logErrorMessage(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean insertFarmFertilizer(String farmId,String fertilizerId){
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("INSERT INTO farm_fertilizer(farm_id,fertilizer_id) VALUES(?,?)");
+            statement.setString(1, farmId);
+            statement.setString(2, fertilizerId);
+            statement.executeUpdate();
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            e.printStackTrace();
+            IFarmLogger logger = new IFarmLogger();
+            logger.logErrorMessage(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean insertFarmPlant(String farmId, String plantId){
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("INSERT INTO farm_plant(farm_id,plant_id) VALUES(?,?)");
+            statement.setString(1, farmId);
+            statement.setString(2, plantId);
+            statement.executeUpdate();
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            e.printStackTrace();
+            IFarmLogger logger = new IFarmLogger();
+            logger.logErrorMessage(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean insertUserFarm(String farmerId, String farmId){
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("INSERT INTO user_farm(user_id,farm_id) VALUES(?,?)");
+            statement.setString(1, farmerId);
+            statement.setString(2, farmId);
+            statement.executeUpdate();
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException s) {
+                s.printStackTrace();
+            }
+            e.printStackTrace();
+            IFarmLogger logger = new IFarmLogger();
+            logger.logErrorMessage(e.getMessage());
+            return false;
+        }
     }
 }

@@ -202,8 +202,7 @@ public class Farmer implements Runnable {
         if(farmNumberActivity.isEmpty()){
             totalActNum = 0;
             for (Farm farm : farmList) {
-//            int randNum = (int) Math.floor(Math.random() * (500) + 1 + 1000);
-                int randNum = 100;
+                int randNum =1000;
                 totalActNum += randNum;
                 farmNumberActivity.put(farm, randNum);
             }
@@ -332,15 +331,13 @@ public class Farmer implements Runnable {
         // Create how many number of activity each farm must have
         totalActNum = 0;
         for (Farm farm : farmList) {
-//        int randNum = (int) Math.floor(Math.random() * (500) + 1 + 1000);
-            int randNum = 100;
+        int randNum = 1000;
             totalActNum += randNum;
             farmNumberActivity.put(farm, randNum);
         }
 
         // Start for loop
         for (int i = 0; i < totalActNum; i++) {
-
             // Farmer randomly pick one farm
             int currentFarm = (int) Math.floor(Math.random() * (farmNumberActivity.size()));
 
