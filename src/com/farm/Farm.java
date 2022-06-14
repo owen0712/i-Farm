@@ -35,7 +35,7 @@ public class Farm {
         dataHandler = new DataHandling();
     }
 
-    public Farm(String _id, String name, String address, Pesticide[] pesticides, Fertilizer[] fertilizes, Plant[] plants, int row, int field, Status[][] status) {
+    public Farm(String _id, String name, String address, Pesticide[] pesticides, Fertilizer[] fertilizers, Plant[] plants, int row, int field, Status[][] status) {
         this._id = _id;
         this.name = name;
         this.address = address;

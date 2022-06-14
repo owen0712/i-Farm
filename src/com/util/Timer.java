@@ -24,7 +24,7 @@ public class Timer {
         try{
             Calendar cal = Calendar.getInstance();
             cal.setTime(sdf.parse(FAKE_START_TIME));
-            cal.add(Calendar.DAY_OF_MONTH, fakeTimeInSecond); // 1 second in program equals 1 day in reality time
+            cal.add(Calendar.DAY_OF_MONTH, fakeTimeInSecond); // 1 second in reality equals 1 day in program
             return sdf.format(cal.getTime());
         } catch(ParseException e){
             return e.getMessage();
