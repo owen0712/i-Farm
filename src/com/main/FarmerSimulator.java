@@ -7,8 +7,10 @@ import com.pesticide.Pesticide;
 import com.plant.Plant;
 import com.util.DAO;
 
-import java.sql.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class FarmerSimulator implements FarmerSimulatorInterface {
 
