@@ -37,7 +37,7 @@ public class FarmerSimulator implements FarmerSimulatorInterface {
         //random generate plant, pesticide and fertilizer for each farm
         for(Farm farm:farmList){
             List<Plant> plantList = dao.getPlantData();
-            int numberOfPlant = random.nextInt(plantList.size()-1)+1;
+            int numberOfPlant = random.nextInt(plantList.size()/2)+1;
             List<Plant> tempPlant = new ArrayList<>();
             for(int i=0;i<numberOfPlant;i++){
                 Plant plant=plantList.remove(random.nextInt(plantList.size()));

@@ -28,7 +28,7 @@ public class SequentialDataHandling {
         boolean success = dao.insertActivityData(activity);
 
         //write record into the log if successfully insert into database
-        if(true) {
+        if(success) {
             String logText = String.format("%s: %-5s -> %-10s %-50s Field %2d Row %2d %6.2f%-5s", activity.getDate(), activity.get_id(), activity.getAction(), activity.getType(), activity.getField(), activity.getRow(), activity.getQuantity(), activity.getUnit(), activity.getFarmId());
             Farm farm = Main.farms[Integer.parseInt(activity.getFarmId().substring(2)) - 1];
             farm.logActivityRecord(logText);

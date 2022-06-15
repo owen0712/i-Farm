@@ -28,7 +28,8 @@ public class DataEntryWorker implements Callable {
         //write record into the log if successfully insert into database
         if (success) {
             try {
-                String logText = String.format("%s: %-5s -> %-6s %-10s %-50s Field %2d Row %2d %6.2f%-5s", activity.getDate(), activity.get_id(), activity.getUserId(), activity.getAction(), activity.getType(), activity.getField(), activity.getRow(), activity.getQuantity(), activity.getUnit(), activity.getFarmId());                Farm farm=Main.farms[Integer.parseInt(activity.getFarmId().substring(2)) - 1];
+                String logText = String.format("%s: %-5s -> %-6s %-10s %-50s Field %2d Row %2d %6.2f%-5s", activity.getDate(), activity.get_id(), activity.getUserId(), activity.getAction(), activity.getType(), activity.getField(), activity.getRow(), activity.getQuantity(), activity.getUnit(), activity.getFarmId());
+                Farm farm=Main.farms[Integer.parseInt(activity.getFarmId().substring(2)) - 1];
                 farm.logActivityRecord(logText);
             } catch (Exception e) {
                 IFarmLogger errorlogger = new IFarmLogger();
