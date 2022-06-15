@@ -1,14 +1,8 @@
 package com.dataHandling;
 
 import com.activity.Activity;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import com.util.DAO;
 import com.util.Timer;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;

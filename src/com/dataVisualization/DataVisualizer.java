@@ -565,21 +565,22 @@ public class DataVisualizer {
 
             String mainUnit = "";
 
-            if (key1.equalsIgnoreCase("sowing") || key1.equalsIgnoreCase("harvest") || key1.equalsIgnoreCase("sale")) {
+            if (key1.equalsIgnoreCase("sowing") || key1.equalsIgnoreCase("harvest") || key1.equalsIgnoreCase("sales")) {
                 mainUnit = "kg";
             } else if (key1.equalsIgnoreCase("fertilizer")) {
-                mainUnit = "pack";
+                mainUnit = "pack (1000g)";
             } else if (key1.equalsIgnoreCase("pesticide")) {
-                mainUnit = "mass";
+                mainUnit = "l";
             }
 
             for (Map.Entry<String, Double> innerEntry : value1.entrySet()) {
                 String innerKey = innerEntry.getKey();
                 double innertValue = innerEntry.getValue();
-                System.out.println(Character.toUpperCase(key1.charAt(0)) + key1.substring(1) + " " + innerKey + "Field " + field +
+                System.out.println(Character.toUpperCase(key1.charAt(0)) + key1.substring(1) + " " + innerKey + " Field " + field +
                         " Row " + row + " " + innertValue + " " + mainUnit);
             }
         }
+        this.activityTypeMap.clear();
     }
 
     private void printResult(List<Activity> farmActivityList) {
